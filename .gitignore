@@ -1,0 +1,10 @@
+#ignorar 
+node_modules
+# ignorar archivos de configuración
+*.json
+*.lock
+*.log
+*.env
+.severless
+__pycache__
+venv

@@ -1,0 +1,40 @@
+service: api-duqesa
+
+package:
+  individually: true
+
+provider:
+  name: aws
+  runtime: python3.8
+  region: us-east-1
+  stage: ${opt:stage, 'dev'}
+
+plugins:
+  - serverless-python-requirements
+
+custom:
+  pythonRequirements:
+  pythonBin: python3.8
+  dockerizePip: non-linux
+
+functions:
+  app:
+    package:
+      include:
+        - main.py
+        - requirements.txt
+      exclude:
+        - "requirements.txt"
+        - "package.json"
+        - "package-lock.json"
+        - ".serverless/**"
+        - ".virtualenv/**"
+        - "node_modules/**"
+
+    handler: main.handler
+    environment:
+      STAGE: ${self:provider.stage} 
+    events:
+      - http:
+          method: any
+          path: /{proxy+}
