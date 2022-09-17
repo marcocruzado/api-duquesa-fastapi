@@ -1,0 +1,8 @@
+{
+    "name": "api-duqesa",
+    "version": "1.0.0",
+    "author": "Cruzado Cuadros and Bill Palma",
+    "dependencies": {
+        "serverless-python-requirements": "^5.0.1"
+    }
+}
