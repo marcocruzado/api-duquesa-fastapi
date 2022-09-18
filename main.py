@@ -2,7 +2,10 @@ from nturl2path import url2pathname
 import os
 from sys import prefix
 from fastapi import FastAPI
+#importando las rutas
 from router.transaction import router as transaction_router
+from router.role import router as role_router
+
 
 from mangum import Mangum
 
@@ -21,7 +24,8 @@ app = FastAPI(
 
 #rutas para la api de transacciones
 app.include_router(transaction_router, prefix="/transaction", tags=["Transaction"])
-#rutas para la api de categorias
+#rutas para la api de roles
+app.include_router(role_router, prefix="/role", tags=["Role"])
 
 
 handler = Mangum(app)

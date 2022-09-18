@@ -3,7 +3,6 @@ from typing import List, Optional
 from pydantic import BaseModel
 
 
-
 class tb_transaction(BaseModel):
     transaction_id: Optional[int]
     user_id: int
