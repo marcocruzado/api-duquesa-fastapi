@@ -5,10 +5,11 @@
 Este es un proyecto para un centro de estética, en el cual se puede consultar:
 <br>
 
-- Todos las trasnacciones que se han realizado en el centro.
+- Todas las trasnacciones que se han realizado en el centro.
 - Todos los Servicios que se ofrecen en el centro.
-- Todos los categorías de los servicios que se ofrecen en el centro.
+- Todas los categorías de los servicios que se ofrecen en el centro.
 - Todos los usuarios que se han registrado en el centro.
+- Todos los roles que se han registrado en el centro.
 
 <b>Requisitos:</b>
 <br>
@@ -115,6 +116,9 @@ inicialmente el proyecto cuenta con los siguientes endpoints:
 - GET /transactions
 - GET /transactions/{id}
 - POST /transactions
+- GET /role
+- GET /role/{id}
+- POST /role
 
 
 
