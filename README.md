@@ -59,6 +59,33 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
+<b>Ejecutar npm install</b>
+<br>
+```
+npm install
+```
+
+<b>Local:</b>
+<br>
+Para poder ejecutar el proyecto en local se debe seguir los siguientes pasos:
+<ol>
+<li>Activar el entorno virtual</li>
+<li>Ejecutar el proyecto</li>
+</ol>
+
+<b>Activar el entorno virtual:</b>
+<br>
+```
+source venv/bin/activate
+```
+
+<b>Ejecutar el proyecto:</b>
+<br>
+```
+uvicorn main:app --reload
+```
+
+    
 <b>Despliegue:</b>
 <br>
 Para poder desplegar el proyecto se debe seguir los siguientes pasos:
@@ -119,7 +146,6 @@ inicialmente el proyecto cuenta con los siguientes endpoints:
 - GET /role
 - GET /role/{id}
 - POST /role
-
 
 
 

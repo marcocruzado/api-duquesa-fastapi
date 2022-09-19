@@ -37,6 +37,15 @@ async def get_transaction_by_id(id: int):
 @router.post("/")
 async def add_transaction(transaction: tb_transaction):
 
+    """ 
+    data = {
+        user_id: 1,
+        service_id: 1,
+        additional_id: [1,2],
+        total_amount: 600,
+        register_timestamp: datetime.now()
+    """
+
     if transaction.additional_amount == []:
         transaction.additional_amount = [0]
 
