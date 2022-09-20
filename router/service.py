@@ -47,3 +47,19 @@ async def add_service(service: tb_service):
         "message": "Servicio agregado",
         "data": data
         }
+
+# OBTENER TODOS  LOS SERVICIOS DE UNA CATEGORIA 
+@router.get("/category/{id}")
+async def get_service_by_category(id: int):
+    sql = "select * from tb_service where category_id = {}".format(id)
+    query = conn.execute(sql)
+    if not query.rowcount:
+        return {
+            "message": "No existe la categoria con el id {}".format(id),
+            "data": []
+        }
+    data = query.fetchall()
+    return {
+        "message": "Servicios encontrados",
+        "data": data
+    }

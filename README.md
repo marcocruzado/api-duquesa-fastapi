@@ -143,10 +143,19 @@ inicialmente el proyecto cuenta con los siguientes endpoints:
 - GET /transactions
 - GET /transactions/{id}
 - POST /transactions
+
 - GET /role
 - GET /role/{id}
 - POST /role
 
+- GET /service
+- GET /service/{id}
+- POST /service
+- GET /service/category/{id}
 
+- GET /additional
+- GET /additional/{id}
+- POST /additional
+- GET /additional/service/{id}
 
 

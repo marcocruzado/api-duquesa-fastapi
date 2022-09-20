@@ -3,7 +3,7 @@ from typing import List, Optional
 from pydantic import BaseModel
 
 class tb_category(BaseModel):
-    category_id: Optional[int]
+    category_id: int
     name: str
     description: str
 

@@ -12,9 +12,6 @@ async def get_transaction():
     query = conn.execute(sql)
     data = query.fetchall()
 
-    print(data)
-    print("MARCO FDP")
-
     return {
         "message": "success",
         "data": data
