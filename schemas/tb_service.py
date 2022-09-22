@@ -11,6 +11,6 @@ class tb_service(BaseModel):
     description: str
     amount: float
     registration_timestamp: Optional[datetime]
-
+    
     class Config:
         orm_mode = True

@@ -11,6 +11,6 @@ class tb_transaction(BaseModel):
     additional_amount: List[int]
     total_amount: float
     registration_timestamp: Optional[datetime]
-
+    
     class Config:
         orm_mode = True

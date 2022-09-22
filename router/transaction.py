@@ -11,7 +11,7 @@ async def get_transaction():
     sql = "SELECT * FROM tb_transaction"
     query = conn.execute(sql)
     data = query.fetchall()
-
+    
     return {
         "message": "success",
         "data": data
@@ -20,7 +20,7 @@ async def get_transaction():
 # GET TRANSACTION BY ID
 @router.get("/{id}")
 async def get_transaction_by_id(id: int):
-    # verificar si existe el id
+    # Verificar si existe el id
     sql = "select * from tb_transaction where transaction_id = {}".format(id)
     query = conn.execute(sql)
     if not query.rowcount:
@@ -37,7 +37,7 @@ async def get_transaction_by_id(id: int):
 # ADD NEW TRANSACTION
 @router.post("/")
 async def add_transaction(transaction: tb_transaction):
-
+    
     """ 
     data = {
         user_id: 1,
@@ -46,15 +46,15 @@ async def add_transaction(transaction: tb_transaction):
         total_amount: 600,
         register_timestamp: datetime.now()
     """
-
+    
     if transaction.additional_amount == []:
         transaction.additional_amount = [0]
-
+    
     if len(transaction.additional_amount) == 1:
         sql = "insert into tb_transaction (user_id, service_id, service_amount, additional_amount, total_amount,registration_timestamp) values ({}, {}, {}, {}, {},'{}')".format(
             transaction.user_id, transaction.service_id, transaction.service_amount, transaction.additional_amount[0], transaction.total_amount, transaction.registration_timestamp)
         query = conn.execute(sql)
-        # obtern la ultima fila insertada
+        # Obtener la última fila insertada
         sql = "select * from tb_transaction order by transaction_id desc limit 1"
         query = conn.execute(sql)
         data = query.fetchall()
@@ -62,14 +62,14 @@ async def add_transaction(transaction: tb_transaction):
             "message": "Transaccion agregada",
             "data": data
         }
-
+    
     else:
         for i in range(len(transaction.additional_amount)):
             sql = "insert into tb_transaction (user_id, service_id, service_amount, additional_amount, total_amount,registration_timestamp) values ({}, {}, {}, {}, {},'{}')".format(
                 transaction.user_id, transaction.service_id, transaction.service_amount, transaction.additional_amount[i], transaction.total_amount, transaction.registration_timestamp)
             query = conn.execute(sql)
             number_rows = len(transaction.additional_amount)
-            # obtener las ultimas number_rows filas insertadas
+            # Obtener las últimas number_rows filas insertadas
             query = conn.execute(
                 "select * from tb_transaction order by transaction_id desc limit {}".format(number_rows))
             data = query.fetchall()

@@ -18,7 +18,7 @@ async def get_additional():
 # GET ADDITIONAL BY ID
 @router.get("/{id}")
 async def get_additional_by_id(id: int):
-    # verificar si existe el id
+    # Verificar si existe el id
     sql = "select * from tb_additional where additional_id = {}".format(id)
     query = conn.execute(sql)
     if not query.rowcount:
@@ -35,7 +35,7 @@ async def get_additional_by_id(id: int):
 # CREATE ADDITIONAL
 @router.post("/")
 async def create_additional(additional: tb_additional):
-    #verificar si existe el additional
+    # Verificar si existe el additional
     additional_id = additional.additional_id
     sql = "select * from tb_additional where additional_id = {}".format(additional_id)
     query = conn.execute(sql)
@@ -44,10 +44,10 @@ async def create_additional(additional: tb_additional):
             "message": "Ya existe el additional con el id {}".format(additional_id),
             "data": []
         }
-    # insertar el additional nuevo en la base de datos
+    # Insertar el additional nuevo en la base de datos
     sql = "insert into tb_additional (service_id, name, description, amount, registration_timestamp) values ({}, '{}', '{}', {}, '{}')".format(additional.service_id, additional.name, additional.description, additional.amount, additional.registration_timestamp)
     conn.execute(sql)
-    #obtener el ultimo registro insertado
+    # Obtener el último registro insertado
     sql = "SELECT * FROM tb_additional ORDER BY additional_id DESC LIMIT 1"
     query = conn.execute(sql)
     data = query.fetchall()
@@ -56,7 +56,7 @@ async def create_additional(additional: tb_additional):
         "data": data
     }
 
-# OBTENER TODOS  LOS ADDITIONAL DE UN SERVICIO
+# OBTENER TODOS LOS ADDITIONAL DE UN SERVICIO
 @router.get("/service/{id}")
 async def get_additional_by_service(id: int):
     sql = "select * from tb_additional where service_id = {}".format(id)

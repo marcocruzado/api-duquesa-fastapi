@@ -18,7 +18,7 @@ async def get_service():
 # GET SERVICE BY ID
 @router.get("/{id}")
 async def get_service_by_id(id: int):
-    # verificar si existe el id
+    # Verificar si existe el id
     sql = "select * from tb_service where service_id = {}".format(id)
     query = conn.execute(sql)
     if not query.rowcount:
@@ -39,7 +39,7 @@ async def add_service(service: tb_service):
     sql = "insert into tb_service (category_id,name,description,amount,registration_timestamp) values ({}, '{}', '{}', {}, '{}')".format(
         service.category_id, service.name, service.description, service.amount, service.registration_timestamp)
     query = conn.execute(sql)
-    # obtern la ultima fila insertada
+    # Obtener la última fila insertada
     sql = "select * from tb_service order by service_id desc limit 1"
     query = conn.execute(sql)
     data = query.fetchall()
@@ -48,7 +48,7 @@ async def add_service(service: tb_service):
         "data": data
         }
 
-# OBTENER TODOS  LOS SERVICIOS DE UNA CATEGORIA 
+# OBTENER TODOS LOS SERVICIOS DE UNA CATEGORÍA 
 @router.get("/category/{id}")
 async def get_service_by_category(id: int):
     sql = "select * from tb_service where category_id = {}".format(id)

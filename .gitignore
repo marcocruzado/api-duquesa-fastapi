@@ -1,6 +1,6 @@
-#ignorar 
+# Ignorar 
 node_modules
-# ignorar archivos de configuración
+# Ignorar archivos de configuración
 *-lock.json
 *.lock
 *.log

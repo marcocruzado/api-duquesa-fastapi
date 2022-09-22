@@ -18,7 +18,7 @@ async def get_role():
 # GET ROLE BY ID
 @router.get("/{id}")
 async def get_role_by_id(id: int):
-    # verificar si existe el id
+    # Verificar si existe el id
     sql = "select * from tb_role where role_id = {}".format(id)
     query = conn.execute(sql)
     if not query.rowcount:
@@ -35,7 +35,7 @@ async def get_role_by_id(id: int):
 # CREATE ROLE
 @router.post("/")
 async def create_role(role: tb_role):
-    #verificar si existe el rol
+    # Verificar si existe el rol
     role_id = role.role_id
     sql = "select * from tb_role where role_id = {}".format(role_id)
     query = conn.execute(sql)
@@ -44,10 +44,10 @@ async def create_role(role: tb_role):
             "message": "Ya existe el rol con el id {}".format(role_id),
             "data": []
         }
-    # insertar el rol nuevo en la base de datos
+    # Insertar el rol nuevo en la base de datos
     sql = "insert into tb_role (role_id, role_name) values ({}, '{}')".format(role.role_id, role.name)
     conn.execute(sql)
-    #obtener el ultimo registro insertado
+    # Obtener el último registro insertado
     sql = "SELECT * FROM tb_role ORDER BY role_id DESC LIMIT 1"
     query = conn.execute(sql)
     data = query.fetchall()

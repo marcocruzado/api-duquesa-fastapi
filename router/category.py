@@ -4,7 +4,6 @@ from schemas.tb_category import tb_category
 
 router = APIRouter()
 
-
 # GET ALL CATEGORIES
 @router.get("/")
 async def get_category():
@@ -19,7 +18,7 @@ async def get_category():
 # GET CATEGORY BY ID
 @router.get("/{id}")
 async def get_category_by_id(id: int):
-    # verificar si existe el id
+    # Verificar si existe el id
     sql = "select * from tb_category where category_id = {}".format(id)
     query = conn.execute(sql)
     if not query.rowcount:
@@ -36,7 +35,7 @@ async def get_category_by_id(id: int):
 # CREATE CATEGORY
 @router.post("/")
 async def create_category(category: tb_category):
-    #verificar si existe la categoria
+    # Verificar si existe la categoría
     category_id = category.category_id
     sql = "select * from tb_category where category_id = {}".format(category_id)
     query = conn.execute(sql)
@@ -45,10 +44,10 @@ async def create_category(category: tb_category):
             "message": "Ya existe la categoria con el id {}".format(category_id),
             "data": []
         }
-    # insertar la categoria nueva en la base de datos
+    # Insertar la categoría nueva en la base de datos
     sql = "insert into tb_category (category_id,name, description) values ({},'{}', '{}')".format(category.category_id,category.name, category.description)
     conn.execute(sql)
-    #obtener el ultimo registro insertado
+    # Obtener el último registro insertado
     sql = "SELECT * FROM tb_category ORDER BY category_id DESC LIMIT 1"
     query = conn.execute(sql)
     data = query.fetchall()

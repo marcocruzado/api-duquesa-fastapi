@@ -30,7 +30,7 @@ functions:
         - ".serverless/**"
         - ".virtualenv/**"
         - "node_modules/**"
-
+    
     handler: main.handler
     environment:
       STAGE: ${self:provider.stage} 
