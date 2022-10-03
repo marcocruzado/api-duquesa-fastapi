@@ -1,35 +1,55 @@
-from fastapi import APIRouter
+# Python
 from config.db import conn
 from schemas.tb_category import tb_category
 
+# FastAPI
+from fastapi import APIRouter
+from fastapi import Path
+from fastapi import HTTPException
+from fastapi import status
+
 router = APIRouter()
 
-# GET ALL CATEGORIES
-@router.get("/")
-async def get_category():
-    sql = "SELECT * FROM tb_category"
+# Get all categories
+@router.get("/detail")
+def show_all_categories():
+    sql = "select * from db_duquesa.tb_category"
     query = conn.execute(sql)
     data = query.fetchall()
+    if len(data) == 0:
+        raise HTTPException(
+            status_code = status.HTTP_404_NOT_FOUND,
+            detail = "¡There aren't categories!"
+            )
     return {
-        "message": "success",
+        "message": "Success",
         "data": data
         }
 
-# GET CATEGORY BY ID
-@router.get("/{id}")
-async def get_category_by_id(id: int):
-    # Verificar si existe el id
-    sql = "select * from tb_category where category_id = {}".format(id)
+# Get category by category_id
+@router.get("/detail/{category_id}")
+def show_category(
+    category_id: int = Path(
+        ...,
+        gt = 0,
+        lt = 10000,
+        title = "Category id",
+        description = "This is the category id. It's required.",
+        example = 1001
+        )
+    ):
+    # Check if the category_id exists
+    sql = "select * from db_duquesa.tb_category where category_id = {}".format(category_id)
     query = conn.execute(sql)
-    if not query.rowcount:
-        return {
-            "message": "No existe la categoria con el id {}".format(id),
-            "data": []
-        }
     data = query.fetchone()
-    return { 
-        "message": "Categoria encontrada", 
-        "data": data 
+    if data == None:
+        raise HTTPException(
+            status_code = status.HTTP_404_NOT_FOUND,
+            detail = "¡This category doesn't exist!"
+            )
+    return {
+        "message": "Category successfully found.",
+        "data": data
         }
 
 # CREATE CATEGORY

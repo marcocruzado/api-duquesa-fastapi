@@ -1,36 +1,82 @@
-from fastapi import APIRouter
+# Python
 from config.db import conn
 from schemas.tb_additional import tb_additional
 
+# FastAPI
+from fastapi import APIRouter
+from fastapi import Path
+from fastapi import HTTPException
+from fastapi import status
+
 router = APIRouter()
 
-# GET ALL ADDITIONAL
-@router.get("/")
-async def get_additional():
-    sql = "SELECT * FROM tb_additional"
+# Get all additionals
+@router.get("/detail")
+def show_all_additionals():
+    sql = "select * from db_duquesa.tb_additional"
     query = conn.execute(sql)
     data = query.fetchall()
+    if len(data) == 0:
+        raise HTTPException(
+            status_code = status.HTTP_404_NOT_FOUND,
+            detail = "¡There aren't additionals!"
+            )
     return {
-        "message": "success",
+        "message": "Success",
         "data": data
         }
 
-# GET ADDITIONAL BY ID
-@router.get("/{id}")
-async def get_additional_by_id(id: int):
-    # Verificar si existe el id
-    sql = "select * from tb_additional where additional_id = {}".format(id)
+# Get additional by additional_id
+@router.get("/detail/{additional_id}")
+def show_additional(
+    additional_id: int = Path(
+        ...,
+        gt = 0,
+        lt = 100000,
+        title = "Additional id",
+        description = "This is the additional id. It's required.",
+        example = 5
+        )
+    ):
+    # Check if the additional_id exists
+    sql = "select * from db_duquesa.tb_additional where additional_id = {}".format(additional_id)
     query = conn.execute(sql)
-    if not query.rowcount:
-        return {
-            "message": "No existe el additional con el id {}".format(id),
-            "data": []
-        }
     data = query.fetchone()
-    return { 
-        "message": "Additional encontrado", 
-        "data": data 
+    if data == None:
+        raise HTTPException(
+            status_code = status.HTTP_404_NOT_FOUND,
+            detail = "¡This additional doesn't exist!"
+            )
+    return {
+        "message": "Additional successfully found.",
+        "data": data
         }
+
+# Get additional(s) by service_id
+@router.get("/detail_by_service_id/{service_id}")
+def show_additionals_by_service_id(
+    service_id: int = Path(
+        ...,
+        gt = 0,
+        lt = 1000000,
+        title = "Service id",
+        description = "This is the service id. It's required.",
+        example = 5
+        )
+    ):
+    # Check if the service_id exists
+    sql = "select * from db_duquesa.tb_additional where service_id = {}".format(service_id)
+    query = conn.execute(sql)
+    data = query.fetchall()
+    if len(data) == 0:
+        raise HTTPException(
+            status_code = status.HTTP_404_NOT_FOUND,
+            detail = "¡Additional with service_id {}".format(service_id) + " does not exist!"
+            )
+    return {
+        "message": "Additional(s) successfully found.",
+        "data": data
+    }
 
 # CREATE ADDITIONAL
 @router.post("/")
@@ -53,21 +99,5 @@ async def create_additional(additional: tb_additional):
     data = query.fetchall()
     return {
         "message": "Additional creado",
-        "data": data
-    }
-
-# OBTENER TODOS LOS ADDITIONAL DE UN SERVICIO
-@router.get("/service/{id}")
-async def get_additional_by_service(id: int):
-    sql = "select * from tb_additional where service_id = {}".format(id)
-    query = conn.execute(sql)
-    if not query.rowcount:
-        return {
-            "message": "No existe el servicio con el id {}".format(id),
-            "data": []
-        }
-    data = query.fetchall()
-    return {
-        "message": "Additional(es) encontrado(s)",
         "data": data
     }

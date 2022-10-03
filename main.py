@@ -16,10 +16,10 @@ stage = os.environ.get("STAGE", None)
 openapi_prefix = f"/{stage}" if stage else "/"
 
 app = FastAPI(
-    title="Api Duqueza",
-    description="Api para la el salon spa Duqueza",
-    version="0.1.0",
-    openapi_prefix=openapi_prefix
+    title = "La Duquesa Salón & Spa",
+    description = "APIs desarrolladas con Python y FastAPI.",
+    version = "0.1.0",
+    openapi_prefix = openapi_prefix
 )
 
 # Rutas para la api de transacciones

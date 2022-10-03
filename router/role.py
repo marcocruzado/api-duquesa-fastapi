@@ -1,35 +1,55 @@
-from fastapi import APIRouter
+# Python
 from config.db import conn
 from schemas.tb_role import tb_role
 
+# FastAPI
+from fastapi import APIRouter
+from fastapi import Path
+from fastapi import HTTPException
+from fastapi import status
+
 router = APIRouter()
 
-# GET ALL ROLES
-@router.get("/")
-async def get_role():
-    sql = "SELECT * FROM tb_role"
+# Get all roles
+@router.get("/detail")
+def show_all_roles():
+    sql = "select * from db_duquesa.tb_role"
     query = conn.execute(sql)
     data = query.fetchall()
+    if len(data) == 0:
+        raise HTTPException(
+            status_code = status.HTTP_404_NOT_FOUND,
+            detail = "¡There aren't roles!"
+            )
     return {
-        "message": "success",
+        "message": "Success",
         "data": data
         }
 
-# GET ROLE BY ID
-@router.get("/{id}")
-async def get_role_by_id(id: int):
-    # Verificar si existe el id
-    sql = "select * from tb_role where role_id = {}".format(id)
+# Get role by role_id
+@router.get("/detail/{role_id}")
+def show_role(
+    role_id: int = Path(
+        ...,
+        gt = 0,
+        lt = 1000,
+        title = "Role id",
+        description = "This is the role id. It's required.",
+        example = 1
+        )
+    ):
+    # Check if the role_id exists
+    sql = "select * from db_duquesa.tb_role where role_id = {}".format(role_id)
     query = conn.execute(sql)
-    if not query.rowcount:
-        return {
-            "message": "No existe el rol con el id {}".format(id),
-            "data": []
-        }
     data = query.fetchone()
-    return { 
-        "message": "Rol encontrado", 
-        "data": data 
+    if data == None:
+        raise HTTPException(
+            status_code = status.HTTP_404_NOT_FOUND,
+            detail = "¡This role doesn't exist!"
+            )
+    return {
+        "message": "Role successfully found.",
+        "data": data
         }
 
 # CREATE ROLE

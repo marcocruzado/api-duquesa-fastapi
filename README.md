@@ -1,19 +1,18 @@
-# PROYECTO SPA-DUQUESA
+# PROYECTO LA DUQUESA SALÓN & SPA
 
 <b>Descripción del proyecto:</b>
 <br>
-Este es un proyecto para un centro de estética, en el cual se puede consultar:
+Este es un proyecto para un Salón & Spa llamado La Duquesa donde tendremos lo siguiente:
 <br>
-
-- Todas las trasnacciones que se han realizado en el centro.
-- Todos los Servicios que se ofrecen en el centro.
+- Todas las transacciones que se han realizado en el centro.
+- Todos los servicios que se ofrecen en el centro.
 - Todas los categorías de los servicios que se ofrecen en el centro.
 - Todos los usuarios que se han registrado en el centro.
 - Todos los roles que se han registrado en el centro.
 
 <b>Requisitos:</b>
 <br>
-para poder ejecutar el proyecto se necesita tener instalado:
+Para poder ejecutar el proyecto se necesita tener instalado:
 <ol>
 <li>virtualenv</li>
 <li>python 3.8</li>
@@ -29,10 +28,10 @@ para poder ejecutar el proyecto se necesita tener instalado:
 <br>
 Para poder instalar el proyecto se debe seguir los siguientes pasos:
 <ol>
-<li>Clonar el proyecto</li>
-<li>Crear un entorno virtual</li>
-<li>Activar el entorno virtual</li>
-<li>Instalar las dependencias</li>
+<li>Clonar el proyecto.</li>
+<li>Crear un entorno virtual.</li>
+<li>Activar el entorno virtual.</li>
+<li>Instalar las dependencias.</li>
 </ol>
 
 <b>Clonar el proyecto:</b>
@@ -69,8 +68,8 @@ npm install
 <br>
 Para poder ejecutar el proyecto en local se debe seguir los siguientes pasos:
 <ol>
-<li>Activar el entorno virtual</li>
-<li>Ejecutar el proyecto</li>
+<li>Activar el entorno virtual.</li>
+<li>Ejecutar el proyecto.</li>
 </ol>
 
 <b>Activar el entorno virtual:</b>
@@ -85,13 +84,33 @@ source venv/bin/activate
 uvicorn main:app --reload
 ```
 
-    
+## Previo al despliegue
+
+Para poder desplegar el proyecto se debe tener en cuenta lo siguiente:
+
+- Se debe tener una cuenta en AWS.
+- Se debe tener instalado serverless.
+
+luego de estos dos puntos tienes que configurar tu cuenta de AWS en serverless, para esto debes ejecutar el siguiente comando:
+
+```
+serverless config credentials --provider aws --key <key> --secret <secret>
+```
+
+Y si vas a usar Cloud9 para desplegar el proyecto debes ejecutar el siguiente comando:
+
+```
+serverless config credentials --provider aws --key <key> --secret <secret> --profile cloud9
+```
+
+Para que así al hacer el deploy se encuentre con tu cuenta de AWS.
+
 <b>Despliegue:</b>
 <br>
 Para poder desplegar el proyecto se debe seguir los siguientes pasos:
 <ol>
-<li>instalar serverless</li>
-<li>instalar serverless-python-requirements</li>
+<li>Instalar serverless</li>
+<li>Instalar serverless-python-requirements</li>
 </ol>
 
 <b>Instalar serverless:</b>
@@ -106,56 +125,30 @@ npm install -g serverless
 npm install --save-dev serverless-python-requirements
 ```
 
-## Previo al despliegue
-
-Para poder desplegar el proyecto se debe tener en cuenta lo siguiente:
-
-- Se debe tener una cuenta en AWS.
-- Se debe tener instalado serverless.
-
-luego de estos dos puntos tienes que configurar tu cuenta de AWS en serverless, para esto debes ejecutar el siguiente comando:
-
-```
-serverless config credentials --provider aws --key <key> --secret <secret>
-```
-y si vas a usar cloud9 para desplegar el proyecto debes ejecutar el siguiente comando:
-
-```
-serverless config credentials --provider aws --key <key> --secret <secret> --profile cloud9
-```
-
-
-para que asi al hacer el deploy este con tu cuenta de AWS.
-
 ## Desplegar el proyecto
 <br>
 Para poder desplegar el proyecto se debe ejecutar el siguiente comando:
-
 ```
 serverless deploy --stage dev
 ```
 
-
-
 ### Endpoints
-inicialmente el proyecto cuenta con los siguientes endpoints:
+El proyecto cuenta con los siguientes endpoints:
 
-- GET /transactions
-- GET /transactions/{id}
-- POST /transactions
+- GET /transaction/detail
+- GET /transaction/detail/{transaction_id}
+- POST /transaction
 
-- GET /role
-- GET /role/{id}
+- GET /role/detail
+- GET /role/detail/{role_id}
 - POST /role
 
-- GET /service
-- GET /service/{id}
+- GET /service/detail
+- GET /service//detail/{service_id}
+- GET /service/detail_by_category/{category_id}
 - POST /service
-- GET /service/category/{id}
 
-- GET /additional
-- GET /additional/{id}
+- GET /additional/detail
+- GET /additional/detail/{additional_id}
+- GET /additional/detail_by_service/{service_id}
 - POST /additional
-- GET /additional/service/{id}
-
-

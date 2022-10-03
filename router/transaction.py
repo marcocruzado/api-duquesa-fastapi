@@ -1,37 +1,55 @@
-
-from fastapi import APIRouter
+# Python
 from config.db import conn
 from schemas.tb_transaction import tb_transaction
 
+# FastAPI
+from fastapi import APIRouter
+from fastapi import Path
+from fastapi import HTTPException
+from fastapi import status
+
 router = APIRouter()
 
-# GET ALL TRANSACTIONS
-@router.get("/")
-async def get_transaction():
-    sql = "SELECT * FROM tb_transaction"
+# Get all transactions
+@router.get("/detail")
+def show_all_transactions():
+    sql = "select * from db_duquesa.tb_transaction"
     query = conn.execute(sql)
     data = query.fetchall()
-    
+    if len(data) == 0:
+        raise HTTPException(
+            status_code = status.HTTP_404_NOT_FOUND,
+            detail = "¡There aren't transactions!"
+            )
     return {
-        "message": "success",
+        "message": "Success",
         "data": data
         }
 
-# GET TRANSACTION BY ID
-@router.get("/{id}")
-async def get_transaction_by_id(id: int):
-    # Verificar si existe el id
-    sql = "select * from tb_transaction where transaction_id = {}".format(id)
+# Get transaction by transaction_id
+@router.get("/detail/{transaction_id}")
+def show_transaction(
+    transaction_id: int = Path(
+        ...,
+        gt = 0,
+        lt = 10000000,
+        title = "Transaction id",
+        description = "This is the transaction id. It's required.",
+        example = 1
+        )
+    ):
+    # Check if the transaction_id exists
+    sql = "select * from db_duquesa.tb_transaction where transaction_id = {}".format(transaction_id)
     query = conn.execute(sql)
-    if not query.rowcount:
-        return {
-            "message": "No existe la transaccion con el id {}".format(id),
-            "data": []
-        }
     data = query.fetchone()
-    return { 
-        "message": "Transaccion encontrada", 
-        "data": data 
+    if data == None:
+        raise HTTPException(
+            status_code = status.HTTP_404_NOT_FOUND,
+            detail = "¡This transaction doesn't exist!"
+            )
+    return {
+        "message": "Transaction successfully found.",
+        "data": data
         }
 
 # ADD NEW TRANSACTION
