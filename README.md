@@ -146,7 +146,7 @@ El proyecto cuenta con los siguientes endpoints:
 - GET /service/detail
 - GET /service//detail/{service_id}
 - GET /service/detail_by_category/{category_id}
-- POST /service
+- POST /service/new
 
 - GET /additional/detail
 - GET /additional/detail/{additional_id}
