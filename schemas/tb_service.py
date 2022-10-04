@@ -1,16 +1,28 @@
-from datetime import datetime
-from typing import List, Optional
-from unicodedata import category
-from pydantic import BaseModel
-#
+# Pydantic
+from pydantic import BaseModel, Field
 
-class tb_service(BaseModel):
-    service_id: Optional[int]
-    category_id: int
-    name: str
-    description: str
-    amount: float
-    registration_timestamp: Optional[datetime]
-    
-    class Config:
-        orm_mode = True
+class Service(BaseModel):
+    category_id: int = Field(
+        ...,
+        gt = 0,
+        le = 10000,
+        example = 1003
+        )
+    name: str = Field(
+        ...,
+        min_length = 4,
+        max_length = 50,
+        example = "Limpieza facial"
+        )
+    description: str = Field(
+        ...,
+        min_length = 10,
+        max_length = 100,
+        example = "Tratamientos faciales antiacné."
+        )
+    amount: float = Field(
+        ...,
+        gt = 0,
+        le = 10000,
+        example = 100
+        )

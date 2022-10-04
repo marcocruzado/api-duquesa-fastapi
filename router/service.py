@@ -1,13 +1,15 @@
 # Python
 from config.db import conn
-from schemas.tb_service import tb_service
+from schemas.tb_service import Service
+from datetime import datetime
 
 # FastAPI
 from fastapi import APIRouter
-from fastapi import Path
+from fastapi import Body, Path
 from fastapi import HTTPException
 from fastapi import status
 
+# An instance of the FastAPI class is created
 router = APIRouter()
 
 # Get all services
@@ -78,17 +80,18 @@ def show_services_by_category_id(
         "data": data
     }
 
-# ADD NEW SERVICE
-@router.post("/")
-async def add_service(service: tb_service):
-    sql = "insert into tb_service (category_id,name,description,amount,registration_timestamp) values ({}, '{}', '{}', {}, '{}')".format(
-        service.category_id, service.name, service.description, service.amount, service.registration_timestamp)
+# Add new service
+@router.post("/new")
+def create_service(service: Service = Body(...)):
+    # Current date and time
+    current_date_and_time = datetime.now()
+    sql = "insert into db_duquesa.tb_service (category_id, name, description, amount, registration_timestamp) values ({}, '{}', '{}', {}, '{}')".format(service.category_id, service.name, service.description, service.amount, current_date_and_time)
     query = conn.execute(sql)
-    # Obtener la última fila insertada
-    sql = "select * from tb_service order by service_id desc limit 1"
+    # Get last inserted row
+    sql = "select * from db_duquesa.tb_service order by service_id desc limit 1"
     query = conn.execute(sql)
     data = query.fetchall()
     return {
-        "message": "Servicio agregado",
+        "message": "Service added successfully",
         "data": data
         }
