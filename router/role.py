@@ -1,10 +1,10 @@
 # Python
 from config.db import conn
-from schemas.tb_role import tb_role
+from schemas.tb_role import Role
 
 # FastAPI
 from fastapi import APIRouter
-from fastapi import Path
+from fastapi import Body, Path
 from fastapi import HTTPException
 from fastapi import status
 
@@ -52,26 +52,26 @@ def show_role(
         "data": data
         }
 
-# CREATE ROLE
-@router.post("/")
-async def create_role(role: tb_role):
-    # Verificar si existe el rol
-    role_id = role.role_id
-    sql = "select * from tb_role where role_id = {}".format(role_id)
+# Add new role
+@router.post("/new")
+def create_role(role: Role = Body(...)):
+    name = role.name
+    # Check if role name exists
+    sql = "select * from db_duquesa.tb_role where name = '{}'".format(name)
     query = conn.execute(sql)
-    if query.rowcount:
-        return {
-            "message": "Ya existe el rol con el id {}".format(role_id),
-            "data": []
-        }
-    # Insertar el rol nuevo en la base de datos
-    sql = "insert into tb_role (role_id, role_name) values ({}, '{}')".format(role.role_id, role.name)
-    conn.execute(sql)
-    # Obtener el último registro insertado
-    sql = "SELECT * FROM tb_role ORDER BY role_id DESC LIMIT 1"
+    data = query.fetchall()
+    if len(data) > 0:
+        raise HTTPException(
+            status_code = status.HTTP_404_NOT_FOUND,
+            detail = "¡Role named {}".format(name) + " already exists!"
+            )
+    sql = "insert into db_duquesa.tb_role (name) values ('{}')".format(role.name)
+    query = conn.execute(sql)
+    # Get last inserted row
+    sql = "select * from db_duquesa.tb_role order by role_id desc limit 1"
     query = conn.execute(sql)
     data = query.fetchall()
     return {
-        "message": "Rol creado",
+        "message": "Role added successfully",
         "data": data
     }

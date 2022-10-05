@@ -12,7 +12,7 @@ class Service(BaseModel):
         ...,
         min_length = 4,
         max_length = 50,
-        example = "Limpieza facial"
+        example = "Limpieza e hidratación"
         )
     description: str = Field(
         ...,

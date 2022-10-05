@@ -83,6 +83,7 @@ source venv/bin/activate
 ```
 uvicorn main:app --reload
 ```
+<br>
 
 ## Previo al despliegue
 
@@ -104,9 +105,11 @@ serverless config credentials --provider aws --key <key> --secret <secret> --pro
 ```
 
 Para que así al hacer el deploy se encuentre con tu cuenta de AWS.
+<br><br>
 
 <b>Despliegue:</b>
 <br>
+
 Para poder desplegar el proyecto se debe seguir los siguientes pasos:
 <ol>
 <li>Instalar serverless</li>
@@ -124,24 +127,27 @@ npm install -g serverless
 ```
 npm install --save-dev serverless-python-requirements
 ```
+<br>
 
 ## Desplegar el proyecto
-<br>
+
 Para poder desplegar el proyecto se debe ejecutar el siguiente comando:
 ```
 serverless deploy --stage dev
 ```
+<br>
 
 ### Endpoints
+
 El proyecto cuenta con los siguientes endpoints:
 
 - GET /transaction/detail
 - GET /transaction/detail/{transaction_id}
-- POST /transaction
+- POST /transaction/new
 
 - GET /role/detail
 - GET /role/detail/{role_id}
-- POST /role
+- POST /role/new
 
 - GET /service/detail
 - GET /service//detail/{service_id}
@@ -151,4 +157,8 @@ El proyecto cuenta con los siguientes endpoints:
 - GET /additional/detail
 - GET /additional/detail/{additional_id}
 - GET /additional/detail_by_service/{service_id}
-- POST /additional
+- POST /additional/new
+
+- GET /category/detail
+- GET /category/detail/{category_id}
+- POST /category/new

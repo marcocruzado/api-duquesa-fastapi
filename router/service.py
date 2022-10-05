@@ -85,6 +85,16 @@ def show_services_by_category_id(
 def create_service(service: Service = Body(...)):
     # Current date and time
     current_date_and_time = datetime.now()
+    name = service.name
+    # Check if role name exists
+    sql = "select * from db_duquesa.tb_service where name = '{}'".format(name)
+    query = conn.execute(sql)
+    data = query.fetchall()
+    if len(data) > 0:
+        raise HTTPException(
+            status_code = status.HTTP_404_NOT_FOUND,
+            detail = "¡Service named {}".format(name) + " already exists!"
+            )
     sql = "insert into db_duquesa.tb_service (category_id, name, description, amount, registration_timestamp) values ({}, '{}', '{}', {}, '{}')".format(service.category_id, service.name, service.description, service.amount, current_date_and_time)
     query = conn.execute(sql)
     # Get last inserted row

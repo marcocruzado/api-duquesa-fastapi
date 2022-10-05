@@ -1,10 +1,10 @@
-from datetime import datetime
-from typing import List, Optional
-from pydantic import BaseModel
+# Pydantic
+from pydantic import BaseModel, Field
 
-class tb_role(BaseModel):
-    role_id: Optional[int]
-    name: str
-    
-    class Config:
-        orm_mode = True
+class Role(BaseModel):
+    name: str = Field(
+        ...,
+        min_length = 4,
+        max_length = 50,
+        example = "test"
+        )
