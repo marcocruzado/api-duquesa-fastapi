@@ -1,6 +1,11 @@
+# Python
+from typing import Optional
+
 # Pydantic
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field  
 from pydantic import EmailStr
+
+
 
 class User(BaseModel):
     role_id: int = Field(
