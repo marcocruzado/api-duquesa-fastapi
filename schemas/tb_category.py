@@ -1,11 +1,23 @@
-from datetime import datetime
-from typing import List, Optional
-from pydantic import BaseModel
+# Python
+from typing import Optional
 
-class tb_category(BaseModel):
-    category_id: int
-    name: str
-    description: str
-    
-    class Config:
-        orm_mode = True
+# Pydantic
+from pydantic import BaseModel, Field
+
+class Category(BaseModel):
+    name: str = Field(
+        ...,
+        min_length = 4,
+        max_length = 50,
+        title = "Category name",
+        description = "This is the category name. It's required.",
+        example = "Relajación"
+        )
+    description: Optional[str] = Field(
+        default = None,
+        min_length = 10,
+        max_length = 100,
+        title = "Category description",
+        description = "This is the category description. It's not required.",
+        example = "La mejor y mayor experiencia de relajación."
+        )

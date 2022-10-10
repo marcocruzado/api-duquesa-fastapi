@@ -9,7 +9,7 @@ from fastapi import Body, Path
 from fastapi import HTTPException
 from fastapi import status
 
-# An instance of the FastAPI class is created
+# An instance of the APIRouter class is created
 router = APIRouter()
 
 # Get all services
@@ -47,7 +47,7 @@ def show_service(
     if data == None:
         raise HTTPException(
             status_code = status.HTTP_404_NOT_FOUND,
-            detail = "¡This service doesn't exist!"
+            detail = "¡This service doesn't exist! Enter another service_id."
             )
     return {
         "message": "Service successfully found.",
@@ -73,29 +73,47 @@ def show_services_by_category_id(
     if len(data) == 0:
         raise HTTPException(
             status_code = status.HTTP_404_NOT_FOUND,
-            detail = "¡Service with category_id {}".format(category_id) + " does not exist!"
+            detail = "¡Service with category_id {}".format(category_id) + " does not exist! Enter another category_id."
             )
     return {
         "message": "Service(s) successfully found.",
         "data": data
-    }
+        }
 
 # Add new service
 @router.post("/new")
 def create_service(service: Service = Body(...)):
     # Current date and time
     current_date_and_time = datetime.now()
+    # Body keys
+    category_id = service.category_id
     name = service.name
-    # Check if role name exists
+    description = service.description
+    amount = service.amount
+    # Check if category id doesn't exist
+    sql = "select * from db_duquesa.tb_category where category_id = {}".format(category_id)
+    query = conn.execute(sql)
+    data = query.fetchall()
+    if len(data) == 0:
+        raise HTTPException(
+            status_code = status.HTTP_400_BAD_REQUEST,
+            detail = "¡category_id {}".format(category_id) + " doesn't exist! Enter another category_id."
+            )
+    # Check if service name exists
     sql = "select * from db_duquesa.tb_service where name = '{}'".format(name)
     query = conn.execute(sql)
     data = query.fetchall()
     if len(data) > 0:
         raise HTTPException(
             status_code = status.HTTP_404_NOT_FOUND,
-            detail = "¡Service named {}".format(name) + " already exists!"
+            detail = "¡Service named {}".format(name) + " already exists! Enter another name."
             )
-    sql = "insert into db_duquesa.tb_service (category_id, name, description, amount, registration_timestamp) values ({}, '{}', '{}', {}, '{}')".format(service.category_id, service.name, service.description, service.amount, current_date_and_time)
+    # Insert new service
+    sql = "insert into db_duquesa.tb_service (category_id, name, amount, registration_timestamp"
+    if description != None: sql += ", description"
+    sql += ") values ({}".format(category_id) + ", '{}'".format(name) + ", {}".format(amount) + ", '{}'".format(current_date_and_time)
+    if description != None: sql += ", '{}'".format(description)
+    sql += ")"
     query = conn.execute(sql)
     # Get last inserted row
     sql = "select * from db_duquesa.tb_service order by service_id desc limit 1"

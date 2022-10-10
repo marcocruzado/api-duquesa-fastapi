@@ -14,9 +14,9 @@ MYSQL_PORT = os.getenv('MYSQL_PORT')
 
 URL = f'mysql+pymysql://{MYSQL_USER}:{MYSQL_PASSWORD}@{MYSQL_HOST}:{MYSQL_PORT}/{MYSQL_DATABASE}'
 
-# Crear el engine
+# Create the engine
 engine = create_engine(URL)
-# Ejecutar metadatos
+# Ejecute metadata
 metadata = MetaData()
-# Conectar a la base de datos
+# Connect to the database
 conn = engine.connect()

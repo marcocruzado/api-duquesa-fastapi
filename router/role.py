@@ -1,6 +1,7 @@
 # Python
 from config.db import conn
 from schemas.tb_role import Role
+from datetime import datetime
 
 # FastAPI
 from fastapi import APIRouter
@@ -8,6 +9,7 @@ from fastapi import Body, Path
 from fastapi import HTTPException
 from fastapi import status
 
+# An instance of the APIRouter class is created
 router = APIRouter()
 
 # Get all roles
@@ -45,7 +47,7 @@ def show_role(
     if data == None:
         raise HTTPException(
             status_code = status.HTTP_404_NOT_FOUND,
-            detail = "¡This role doesn't exist!"
+            detail = "¡This role doesn't exist! Enter another role_id."
             )
     return {
         "message": "Role successfully found.",
@@ -55,6 +57,9 @@ def show_role(
 # Add new role
 @router.post("/new")
 def create_role(role: Role = Body(...)):
+    # Current date and time
+    current_date_and_time = datetime.now()
+    # Body key
     name = role.name
     # Check if role name exists
     sql = "select * from db_duquesa.tb_role where name = '{}'".format(name)
@@ -63,9 +68,10 @@ def create_role(role: Role = Body(...)):
     if len(data) > 0:
         raise HTTPException(
             status_code = status.HTTP_404_NOT_FOUND,
-            detail = "¡Role named {}".format(name) + " already exists!"
+            detail = "¡Role named {}".format(name) + " already exists! Enter another name."
             )
-    sql = "insert into db_duquesa.tb_role (name) values ('{}')".format(role.name)
+    # Insert new role
+    sql = "insert into db_duquesa.tb_role (name, registration_timestamp) values ('{}', '{}')".format(name, current_date_and_time)
     query = conn.execute(sql)
     # Get last inserted row
     sql = "select * from db_duquesa.tb_role order by role_id desc limit 1"
@@ -74,4 +80,4 @@ def create_role(role: Role = Body(...)):
     return {
         "message": "Role added successfully",
         "data": data
-    }
+        }

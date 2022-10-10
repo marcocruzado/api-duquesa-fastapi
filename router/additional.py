@@ -1,13 +1,15 @@
 # Python
 from config.db import conn
-from schemas.tb_additional import tb_additional
+from schemas.tb_additional import Additional
+from datetime import datetime
 
 # FastAPI
 from fastapi import APIRouter
-from fastapi import Path
+from fastapi import Body, Path
 from fastapi import HTTPException
 from fastapi import status
 
+# An instance of the APIRouter class is created
 router = APIRouter()
 
 # Get all additionals
@@ -45,10 +47,10 @@ def show_additional(
     if data == None:
         raise HTTPException(
             status_code = status.HTTP_404_NOT_FOUND,
-            detail = "¡This additional doesn't exist!"
+            detail = "¡This additional doesn't exist! Enter another additional_id."
             )
     return {
-        "message": "Additional successfully found.",
+        "message": "Additional service successfully found.",
         "data": data
         }
 
@@ -71,33 +73,53 @@ def show_additionals_by_service_id(
     if len(data) == 0:
         raise HTTPException(
             status_code = status.HTTP_404_NOT_FOUND,
-            detail = "¡Additional with service_id {}".format(service_id) + " does not exist!"
+            detail = "¡Additional with service_id {}".format(service_id) + " does not exist! Enter another service_id."
             )
     return {
-        "message": "Additional(s) successfully found.",
+        "message": "Additional service(s) successfully found.",
         "data": data
-    }
-
-# CREATE ADDITIONAL
-@router.post("/")
-async def create_additional(additional: tb_additional):
-    # Verificar si existe el additional
-    additional_id = additional.additional_id
-    sql = "select * from tb_additional where additional_id = {}".format(additional_id)
-    query = conn.execute(sql)
-    if query.rowcount:
-        return {
-            "message": "Ya existe el additional con el id {}".format(additional_id),
-            "data": []
         }
-    # Insertar el additional nuevo en la base de datos
-    sql = "insert into tb_additional (service_id, name, description, amount, registration_timestamp) values ({}, '{}', '{}', {}, '{}')".format(additional.service_id, additional.name, additional.description, additional.amount, additional.registration_timestamp)
-    conn.execute(sql)
-    # Obtener el último registro insertado
-    sql = "SELECT * FROM tb_additional ORDER BY additional_id DESC LIMIT 1"
+
+# Add new additional
+@router.post("/new")
+def create_additional(additional: Additional = Body(...)):
+    # Current date and time
+    current_date_and_time = datetime.now()
+    # Body keys
+    service_id = additional.service_id
+    name = additional.name
+    description = additional.description
+    amount = additional.amount
+    # Check if service id doesn't exist
+    sql = "select * from db_duquesa.tb_service where service_id = {}".format(service_id)
+    query = conn.execute(sql)
+    data = query.fetchall()
+    if len(data) == 0:
+        raise HTTPException(
+            status_code = status.HTTP_400_BAD_REQUEST,
+            detail = "¡service_id {}".format(service_id) + " doesn't exist! Enter another service_id."
+            )
+    # Check if name of the additional service exists
+    sql = "select * from db_duquesa.tb_additional where name = '{}'".format(name)
+    query = conn.execute(sql)
+    data = query.fetchall()
+    if len(data) > 0:
+        raise HTTPException(
+            status_code = status.HTTP_404_NOT_FOUND,
+            detail = "¡Additional service named {}".format(name) + " already exists! Enter another name."
+            )
+    # Insert new additional service
+    sql = "insert into db_duquesa.tb_additional (service_id, name, amount, registration_timestamp"
+    if description != None: sql += ", description"
+    sql += ") values ({}".format(service_id) + ", '{}'".format(name) + ", {}".format(amount) + ", '{}'".format(current_date_and_time)
+    if description != None: sql += ", '{}'".format(description)
+    sql += ")"
+    query = conn.execute(sql)
+    # Get last inserted row
+    sql = "select * from db_duquesa.tb_additional order by additional_id desc limit 1"
     query = conn.execute(sql)
     data = query.fetchall()
     return {
-        "message": "Additional creado",
+        "message": "Additional service added successfully",
         "data": data
-    }
+        }
