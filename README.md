@@ -64,7 +64,10 @@ pip install -r requirements.txt
 npm install
 ```
 
-<b>Local:</b>
+# <b>Local:</b>
+
+## Primera forma:
+<p> la instalacion con FastAPI</p>
 <br>
 Para poder ejecutar el proyecto en local se debe seguir los siguientes pasos:
 <ol>
@@ -84,6 +87,21 @@ source venv/bin/activate
 uvicorn main:app --reload
 ```
 <br>
+
+## Segunda forma:
+<p> Con Docker</p>
+<br>
+Para poder ejecutar el proyecto en local se debe seguir los siguientes pasos:
+
+<b>Ejecutar el contenedor:</b>
+<br>
+```
+docker build -t imagen-duqueza:0.1.2 .
+``` 
+luego de ejecutar el comando anterior se debe ejecutar el siguiente comando:
+```
+docker run --name duqueza-container -p 8000:8000 imagen-duqueza:0.1.2
+```
 
 ## Previo al despliegue
 
@@ -162,3 +180,9 @@ El proyecto cuenta con los siguientes endpoints:
 - GET /category/detail
 - GET /category/detail/{category_id}
 - POST /category/new
+
+- GET /user/detail
+- GET /user/detail/{user_id}
+- POST /user/new
+- POST /user/login
+

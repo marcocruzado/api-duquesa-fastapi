@@ -1,12 +1,13 @@
 from fastapi import APIRouter
 from config.db import conn
-from schemas.tb_user import User
-from schemas.tb_login import Login
-from auth.verification import hash_password , verify_password
+from schemas.tb_user import User, Login
+from auth.verification import hash_password, verify_password
 
 router = APIRouter()
 
 # LOGIN
+
+
 @router.post("/login")
 async def login(login: Login):
     sql = "SELECT * FROM tb_user WHERE email = '{}'".format(login.email)
@@ -28,8 +29,8 @@ async def login(login: Login):
     }
 
 # GET ALL USERS
-@router.get("/")
-async def get_users():
+@router.get("/detail")
+async def show_all_users():
     sql = "SELECT * FROM tb_user"
     query = conn.execute(sql)
     data = query.fetchall()
@@ -41,12 +42,12 @@ async def get_users():
     return {
         "message": "success",
         "data": data
-        }
+    }
 
 
 # GET USER BY ID
-@router.get("/{id}")
-async def get_user_by_id(id: int):
+@router.get("/detail/{id}")
+async def show_user(id: int):
     # verificar si existe el id
     sql = "SELECT * FROM tb_user WHERE user_id = {}".format(id)
     query = conn.execute(sql)
@@ -56,15 +57,15 @@ async def get_user_by_id(id: int):
             "data": []
         }
     data = query.fetchone()
-    return { 
-        "message": "Usuario encontrado", 
-        "data": data 
-        }
+    return {
+        "message": "Usuario encontrado",
+        "data": data
+    }
 
 # ADD NEW USER
-@router.post("/")
-async def add_user(user: User):
-    
+@router.post("/new")
+async def create_user(user: User):
+
     # verificar si existe el email
     sql = "SELECT * FROM tb_user WHERE email = '{}'".format(user.email)
     query = conn.execute(sql)
@@ -73,16 +74,17 @@ async def add_user(user: User):
             "message": "El email {} ya existe".format(user.email),
             "data": []
         }
-    """# verificar si existe el msisdn
+    # verificar si existe el msisdn
     sql = "SELECT * FROM tb_user WHERE msisdn = {}".format(user.msisdn)
     query = conn.execute(sql)
     if query.rowcount:
         return {
             "message": "El msisdn {} ya existe".format(user.msisdn),
             "data": []
-        } """
+        }
     # insertar el usuario
-    sql = "INSERT INTO tb_user (role_id, name, lastname, msisdn, email, password) VALUES ({}, '{}', '{}', {}, '{}', '{}')".format(user.role_id, user.name, user.lastname, user.msisdn, user.email, hash_password(user.password))
+    sql = "INSERT INTO tb_user (role_id, name, lastname, msisdn, email, password) VALUES ({}, '{}', '{}', {}, '{}', '{}')".format(
+        user.role_id, user.name, user.lastname, user.msisdn, user.email, hash_password(user.password))
     conn.execute(sql)
     # obtener el ultimo id insertado
     sql = "SELECT * FROM tb_user WHERE user_id = (SELECT MAX(user_id) FROM tb_user)"
