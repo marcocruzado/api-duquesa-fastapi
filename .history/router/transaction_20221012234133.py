@@ -94,7 +94,7 @@ def create_transaction(transaction: Transaction = Body(...)):
             sql = "select * from db_duquesa.tb_additional where additional_id = {}".format(i)
             query = conn.execute(sql)
             data = query.fetchall()
-            print("aca esta la cosa",len(data))
+            print(len(data))
             if len(data) == 0:
                 raise HTTPException(
                     status_code = status.HTTP_400_BAD_REQUEST,

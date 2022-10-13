@@ -85,7 +85,7 @@ def create_transaction(transaction: Transaction = Body(...)):
             detail = "service_id {}".format(service_id) + " doesn't exist! Enter another service_id."
             )
     #si el additional_id es NULL
-    if additional_id == None or additional_amount == None:
+    if additional_id == None:
         additional_id = 0
         additional_amount = 0
     else:
@@ -94,13 +94,12 @@ def create_transaction(transaction: Transaction = Body(...)):
             sql = "select * from db_duquesa.tb_additional where additional_id = {}".format(i)
             query = conn.execute(sql)
             data = query.fetchall()
-            print("aca esta la cosa",len(data))
             if len(data) == 0:
                 raise HTTPException(
                     status_code = status.HTTP_400_BAD_REQUEST,
                     detail = "additional_id {}".format(i) + " doesn't exist! Enter another additional_id."
                     )
-    sql = "insert into db_duquesa.tb_transaction (user_id, service_id, additional_id, service_amount, additional_amount, total_amount, registration_timestamp) values ({}, {}, '{}', {}, '{}', {}, '{}')".format(user_id, service_id, str(additional_id), service_amount, str(additional_amount), total_amount, current_date_and_time)
+    sql = "insert into db_duquesa.tb_transaction (user_id, service_id, additional_id, service_amount, additional_amount, total_amount, registration_timestamp) values ({}, {}, {}, {}, {}, {}, '{}')".format(user_id, service_id, additional_id, service_amount, additional_amount, total_amount, current_date_and_time)
     conn.execute(sql)
     # obtener el ultimo registro
     sql = "select * from db_duquesa.tb_transaction order by transaction_id desc limit 1"

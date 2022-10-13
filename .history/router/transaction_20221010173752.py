@@ -1,5 +1,4 @@
 # Python
-from typing import List
 from config.db import conn
 from schemas.tb_transaction import Transaction
 from datetime import datetime
@@ -84,30 +83,43 @@ def create_transaction(transaction: Transaction = Body(...)):
             status_code = status.HTTP_400_BAD_REQUEST,
             detail = "service_id {}".format(service_id) + " doesn't exist! Enter another service_id."
             )
-    #si el additional_id es NULL
-    if additional_id == None or additional_amount == None:
-        additional_id = 0
-        additional_amount = 0
-    else:
-        # Check if additional id doesn't exist
+    # Check if additional id doesn't exist
+    if additional_id != None:
         for i in additional_id:
             sql = "select * from db_duquesa.tb_additional where additional_id = {}".format(i)
             query = conn.execute(sql)
             data = query.fetchall()
-            print("aca esta la cosa",len(data))
             if len(data) == 0:
                 raise HTTPException(
                     status_code = status.HTTP_400_BAD_REQUEST,
                     detail = "additional_id {}".format(i) + " doesn't exist! Enter another additional_id."
                     )
-    sql = "insert into db_duquesa.tb_transaction (user_id, service_id, additional_id, service_amount, additional_amount, total_amount, registration_timestamp) values ({}, {}, '{}', {}, '{}', {}, '{}')".format(user_id, service_id, str(additional_id), service_amount, str(additional_amount), total_amount, current_date_and_time)
-    conn.execute(sql)
-    # obtener el ultimo registro
-    sql = "select * from db_duquesa.tb_transaction order by transaction_id desc limit 1"
-    query = conn.execute(sql)
-    data = query.fetchone()
-    return {
-        "message": "Transaction successfully created.",
-        "data": data
-        }
-
+    # Insert new transaction(s)
+    if additional_id == None or len(additional_id) == 1:
+        sql = "insert into db_duquesa.tb_transaction (user_id, service_id, service_amount, additional_amount, total_amount, registration_timestamp"
+        if additional_id != None: sql += ", additional_id"
+        sql += ") values ({}".format(user_id) + ", {}".format(service_id) + ", '{}'".format(service_amount) + ", '{}'".format(additional_amount) + ", '{}'".format(total_amount) + ", '{}'".format(current_date_and_time)
+        if additional_id != None: sql += ", {}".format(additional_id[0])
+        sql += ")"
+        query = conn.execute(sql)
+        # Get the last inserted row
+        sql = "select * from db_duquesa.tb_transaction order by transaction_id desc limit 1"
+        query = conn.execute(sql)
+        data = query.fetchall()
+        return {
+            "message": "Transaction added successfully",
+            "data": data
+            }
+    elif len(additional_id) > 1:
+        for i in range(len(additional_id)):
+            sql = "insert into db_duquesa.tb_transaction (user_id, service_id, additional_id, service_amount, additional_amount, total_amount, registration_timestamp) values ({}, {}, {}, '{}', '{}', '{}', '{}')".format(user_id, service_id, additional_id[i], service_amount, additional_amount, total_amount, current_date_and_time)
+            query = conn.execute(sql)
+            number_rows = len(additional_id)
+            # Get last inserted rows
+            query = conn.execute(
+                "select * from db_duquesa.tb_transaction order by transaction_id desc limit {}".format(number_rows))
+            data = query.fetchall()
+        return {
+            "message": "Transaction(s) added successfully",
+            "data": data
+            }

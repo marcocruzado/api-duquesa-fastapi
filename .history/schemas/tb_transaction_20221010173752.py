@@ -38,13 +38,13 @@ class Transaction(BaseModel):
         description = "This is the service amount. It's required.",
         example = 100
         )
-    additional_amount:  Optional[List[int]]= Field(
+    additional_amount: float = Field(
         ...,
         gt = 0,
         le = 10000,
         title = "Additional amount",
         description = "This is the additional amount. It's required.",
-        example = [10, 20]
+        example = 50
         )
     total_amount: float = Field(
         ...,

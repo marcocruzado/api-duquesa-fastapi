@@ -85,7 +85,7 @@ def create_transaction(transaction: Transaction = Body(...)):
             detail = "service_id {}".format(service_id) + " doesn't exist! Enter another service_id."
             )
     #si el additional_id es NULL
-    if additional_id == None or additional_amount == None:
+    if additional_id == None:
         additional_id = 0
         additional_amount = 0
     else:
@@ -94,7 +94,6 @@ def create_transaction(transaction: Transaction = Body(...)):
             sql = "select * from db_duquesa.tb_additional where additional_id = {}".format(i)
             query = conn.execute(sql)
             data = query.fetchall()
-            print("aca esta la cosa",len(data))
             if len(data) == 0:
                 raise HTTPException(
                     status_code = status.HTTP_400_BAD_REQUEST,
