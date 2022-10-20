@@ -68,7 +68,7 @@ def create_role(role: Role = Body(...)):
     if len(data) > 0:
         raise HTTPException(
             status_code = status.HTTP_404_NOT_FOUND,
-            detail = "¡Role named {}".format(name) + " already exists! Enter another name."
+            detail = "¡Role named '{}'".format(name) + " already exists! Enter another name."
             )
     # Insert new role
     sql = "insert into db_duquesa.tb_role (name, registration_timestamp) values ('{}', '{}')".format(name, current_date_and_time)

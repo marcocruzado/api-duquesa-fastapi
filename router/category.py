@@ -69,7 +69,7 @@ def create_category(category: Category = Body(...)):
     if len(data) > 0:
         raise HTTPException(
             status_code = status.HTTP_404_NOT_FOUND,
-            detail = "¡Category named {}".format(name) + " already exists! Enter another name."
+            detail = "¡Category named '{}'".format(name) + " already exists! Enter another name."
             )
     # Insert new category
     sql = "insert into db_duquesa.tb_category (name, registration_timestamp"

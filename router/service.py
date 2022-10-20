@@ -106,7 +106,7 @@ def create_service(service: Service = Body(...)):
     if len(data) > 0:
         raise HTTPException(
             status_code = status.HTTP_404_NOT_FOUND,
-            detail = "¡Service named {}".format(name) + " already exists! Enter another name."
+            detail = "¡Service named '{}'".format(name) + " already exists! Enter another name."
             )
     # Insert new service
     sql = "insert into db_duquesa.tb_service (category_id, name, amount, registration_timestamp"

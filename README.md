@@ -185,4 +185,3 @@ El proyecto cuenta con los siguientes endpoints:
 - GET /user/detail/{user_id}
 - POST /user/new
 - POST /user/login
-

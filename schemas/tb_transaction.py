@@ -39,7 +39,7 @@ class Transaction(BaseModel):
         example = 100
         )
     additional_amount:  Optional[List[int]]= Field(
-        ...,
+        default = None,
         gt = 0,
         le = 10000,
         title = "Additional amount",

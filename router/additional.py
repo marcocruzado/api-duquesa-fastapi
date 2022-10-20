@@ -106,7 +106,7 @@ def create_additional(additional: Additional = Body(...)):
     if len(data) > 0:
         raise HTTPException(
             status_code = status.HTTP_404_NOT_FOUND,
-            detail = "¡Additional service named {}".format(name) + " already exists! Enter another name."
+            detail = "¡Additional service named '{}'".format(name) + " already exists! Enter another name."
             )
     # Insert new additional service
     sql = "insert into db_duquesa.tb_additional (service_id, name, amount, registration_timestamp"
