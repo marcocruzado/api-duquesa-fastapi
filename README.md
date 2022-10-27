@@ -1,5 +1,4 @@
 # PROYECTO LA DUQUESA SALÓN & SPA
-### vamos a probar n8n: no code otra vez 
 
 <b>Descripción del proyecto:</b>
 <br>
@@ -68,7 +67,7 @@ npm install
 # <b>Local:</b>
 
 ## Primera forma:
-<p> la instalacion con FastAPI</p>
+<p> La instalación con FastAPI</p>
 <br>
 Para poder ejecutar el proyecto en local se debe seguir los siguientes pasos:
 <ol>
@@ -99,7 +98,7 @@ Para poder ejecutar el proyecto en local se debe seguir los siguientes pasos:
 ```
 docker build -t imagen-duqueza:0.1.2 .
 ``` 
-luego de ejecutar el comando anterior se debe ejecutar el siguiente comando:
+Luego de ejecutar el comando anterior se debe ejecutar el siguiente comando:
 ```
 docker run --name duqueza-container -p 8000:8000 imagen-duqueza:0.1.2
 ```
@@ -162,6 +161,7 @@ El proyecto cuenta con los siguientes endpoints:
 
 - GET /transaction/detail
 - GET /transaction/detail/{transaction_id}
+- GET /transaction/specific_detail/{transaction_id}
 - POST /transaction/new
 
 - GET /role/detail

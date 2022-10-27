@@ -53,6 +53,58 @@ def show_transaction(
         "data": data
         }
 
+# Get specific transaction by transaction_id
+@router.get("/specific_detail/{transaction_id}")
+def show_specific_transaction(
+    transaction_id: int = Path(
+        ...,
+        gt = 0,
+        lt = 10000000,
+        title = "Transaction id",
+        description = "This is the transaction id. It's required.",
+        example = 1
+        )
+    ):
+    # Check if the transaction_id exists
+    sql = "SELECT tt.transaction_id, tt.user_id, tu.name AS user_name, tu.lastname AS user_lastname, tu.msisdn AS user_msisdn, tu.email AS user_email, tt.service_id, ts.name AS service_name, ts.description AS service_description, ts.amount AS service_amount, tt.additional_id, tt.total_amount, tt.registration_timestamp FROM db_duquesa.tb_transaction AS tt INNER JOIN db_duquesa.tb_user AS tu ON tt.user_id = tu.user_id INNER JOIN db_duquesa.tb_service AS ts ON tt.service_id = ts.service_id where transaction_id = {}".format(transaction_id)
+    query = conn.execute(sql)
+    data = query.fetchone()
+    if data == None:
+        raise HTTPException(
+            status_code = status.HTTP_404_NOT_FOUND,
+            detail = "¡This transaction doesn't exist! Enter another transaction_id."
+            )
+    # Get additional_services
+    if data.additional_id != None:
+        additional_services = []
+        for i in eval(data.additional_id):        
+                sql = "select additional_id, name AS additional_name, description AS additional_description, amount AS additional_amount from db_duquesa.tb_additional where additional_id = {}".format(i)
+                query = conn.execute(sql)
+                data2 = query.fetchall()
+                data2 = data2[0]
+                additional_services.append(data2)
+    else: additional_services = None
+    return {
+        "message": "Transaction successfully found.",
+        "transaction_id": data.transaction_id,
+        "user": {
+            "user_id": data.user_id,
+            "user_name": data.user_name,
+            "user_lastname": data.user_lastname,
+            "user_msisdn": data.user_msisdn,
+            "user_email": data.user_email
+        },
+        "service": {
+            "service_id": data.service_id,
+            "service_name": data.service_name,
+            "service_description": data.service_description,
+            "service_amount": data.service_amount,
+            "additional_services": additional_services,
+            "total_amount": data.total_amount
+        },
+        "registration_timestamp": data.registration_timestamp
+    }
+
 # Add new transaction
 @router.post("/new")
 def create_transaction(transaction: Transaction = Body(...)):
