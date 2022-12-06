@@ -17,7 +17,7 @@ openapi_prefix = f"/{stage}" if stage else "/"
 app = FastAPI(
     title = "La Duquesa Salón & Spa",
     description = "Desarrollo Backend del proyecto (APIs).",
-    version = "0.1.2",
+    version = "1.1.0",
     root_path = openapi_prefix,
 )
 

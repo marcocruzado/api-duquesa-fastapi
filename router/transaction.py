@@ -166,3 +166,90 @@ def create_transaction(transaction: Transaction = Body(...)):
         "message": "Transaction successfully created.",
         "data": data
         }
+
+# Update transaction
+@router.put("/update/{transaction_id}")
+def update_transaction(transaction_id: int, transaction: Transaction = Body(...)):
+    # Body keys
+    user_id = transaction.user_id
+    service_id = transaction.service_id
+    additional_id = transaction.additional_id
+    service_amount = transaction.service_amount
+    additional_amount = transaction.additional_amount
+    total_amount = transaction.total_amount
+    # Check if transaction id doesn't exist
+    sql = "select * from db_duquesa.tb_transaction where transaction_id = {}".format(transaction_id)
+    query = conn.execute
+    data = query.fetchall()
+    if len(data) == 0:
+        raise HTTPException(
+            status_code = status.HTTP_400_BAD_REQUEST,
+            detail = "transaction_id {}".format(transaction_id) + " doesn't exist! Enter another transaction_id."
+            )
+    # Check if user id doesn't exist
+    sql = "select * from db_duquesa.tb_user where user_id = {}".format(user_id)
+    query = conn.execute(sql)
+    data = query.fetchall()
+    if len(data) == 0:
+        raise HTTPException(
+            status_code = status.HTTP_400_BAD_REQUEST,
+            detail = "user_id {}".format(user_id) + " doesn't exist! Enter another user_id."
+            )
+    # Check if service id doesn't exist
+    sql = "select * from db_duquesa.tb_service where service_id = {}".format(service_id)
+    query = conn.execute(sql)
+    data = query.fetchall()
+    if len(data) == 0:
+        raise HTTPException(
+            status_code = status.HTTP_400_BAD_REQUEST,
+            detail = "service_id {}".format(service_id) + " doesn't exist! Enter another service_id."
+            )
+    # Validation additional_id & additional_amount
+    if additional_id == None: additional_amount = 0
+    elif additional_amount == None:
+        additional_id = None
+        additional_amount = 0
+    else:
+        # Check if additional id doesn't exist
+        for i in additional_id:
+            sql = "select * from db_duquesa.tb_additional where additional_id = {}".format(i)
+            query = conn.execute(sql)
+            data = query.fetchall()
+            if len(data) == 0:
+                raise HTTPException(
+                    status_code = status.HTTP_400_BAD_REQUEST,
+                    detail = "additional_id {}".format(i) + " doesn't exist! Enter another additional_id."
+                    )
+    # Update transaction
+    sql = "update db_duquesa.tb_transaction set user_id = {}".format(user_id) + ", service_id = {}".format(service_id) + ", service_amount = {}".format(service_amount) + ", additional_amount = '{}'".format(str(additional_amount)) + ", total_amount = {}".format(total_amount)
+    if additional_id != None: sql += ", additional_id = '{}'".format(str(additional_id))
+    sql += " where transaction_id = {}".format(transaction_id)
+    query = conn.execute(sql)
+    # Get last updated row
+    sql = "select * from db_duquesa.tb_transaction where transaction_id = {}".format(transaction_id)
+    query = conn.execute(sql)
+    data = query.fetchone()
+    return {
+        "message": "Transaction successfully updated.",
+        "data": data
+        }
+    
+# Delete transaction
+@router.delete("/delete/{transaction_id}")
+def delete_transaction(transaction_id: int):
+    # Check if transaction id doesn't exist
+    sql = "select * from db_duquesa.tb_transaction where transaction_id = {}".format(transaction_id)
+    query = conn.execute
+    data = query.fetchall()
+    if len(data) == 0:
+        raise HTTPException(
+            status_code = status.HTTP_400_BAD_REQUEST,
+            detail = "transaction_id {}".format(transaction_id) + " doesn't exist! Enter another transaction_id."
+            )
+    # Delete transaction
+    sql = "delete from db_duquesa.tb_transaction where transaction_id = {}".format(transaction_id)
+    query = conn.execute(sql)
+    return {
+        "message": "Transaction successfully deleted."
+        }
+        

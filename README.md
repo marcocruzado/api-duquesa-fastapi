@@ -163,24 +163,34 @@ El proyecto cuenta con los siguientes endpoints:
 - GET /transaction/detail/{transaction_id}
 - GET /transaction/specific_detail/{transaction_id}
 - POST /transaction/new
+- PUT /transaction/update/{transaction_id}
+- DELETE /transaction/delete/{transaction_id}
 
 - GET /role/detail
 - GET /role/detail/{role_id}
 - POST /role/new
+- PUT /role/update/{role_id}
+- DELETE /role/delete/{role_id}
 
 - GET /service/detail
 - GET /service//detail/{service_id}
 - GET /service/detail_by_category/{category_id}
 - POST /service/new
+- PUT /service/update/{service_id}
+- DELETE /service/delete/{service_id}
 
 - GET /additional/detail
 - GET /additional/detail/{additional_id}
 - GET /additional/detail_by_service/{service_id}
 - POST /additional/new
+- PUT /additional/update/{additional_id}
+- DELETE /additional/delete/{additional_id}
 
 - GET /category/detail
 - GET /category/detail/{category_id}
 - POST /category/new
+- PUT /category/update/{category_id}
+- DELETE /category/delete/{category_id}
 
 - GET /user/detail
 - GET /user/detail/{user_id}
