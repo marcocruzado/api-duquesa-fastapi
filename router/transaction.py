@@ -179,7 +179,7 @@ def update_transaction(transaction_id: int, transaction: Transaction = Body(...)
     total_amount = transaction.total_amount
     # Check if transaction id doesn't exist
     sql = "select * from db_duquesa.tb_transaction where transaction_id = {}".format(transaction_id)
-    query = conn.execute
+    query = conn.execute(sql)
     data = query.fetchall()
     if len(data) == 0:
         raise HTTPException(
@@ -239,7 +239,7 @@ def update_transaction(transaction_id: int, transaction: Transaction = Body(...)
 def delete_transaction(transaction_id: int):
     # Check if transaction id doesn't exist
     sql = "select * from db_duquesa.tb_transaction where transaction_id = {}".format(transaction_id)
-    query = conn.execute
+    query = conn.execute(sql)
     data = query.fetchall()
     if len(data) == 0:
         raise HTTPException(

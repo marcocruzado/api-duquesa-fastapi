@@ -125,7 +125,7 @@ def update_category(
             detail = "¡Category named '{}'".format(name) + " already exists! Enter another name."
             )
     # Update category
-    sql = "update db_duquesa.tb_category set name = '{}', update_timestamp = '{}'".format(name, current_date_and_time)
+    sql = "update db_duquesa.tb_category set name = '{}', registration_timestamp = '{}'".format(name, current_date_and_time)
     if description != None: sql += ", description = '{}'".format(description)
     sql += " where category_id = {}".format(category_id)
     query = conn.execute(sql)
@@ -137,7 +137,7 @@ def update_category(
         "message": "Category updated successfully",
         "data": data
         }
-
+""" 
 # Delete category
 @router.delete("/delete/{category_id}")
 def delete_category(
@@ -159,10 +159,13 @@ def delete_category(
             status_code = status.HTTP_404_NOT_FOUND,
             detail = "¡This category doesn't exist! Enter another category_id."
             )
+    # eliminar los servicios en la tabla tb_service que pertenezcan a la categoría
+    sql = "delete from db_duquesa.tb_service where category_id = {}".format(category_id)
+    query = conn.execute(sql)
     # Delete category
     sql = "delete from db_duquesa.tb_category where category_id = {}".format(category_id)
     query = conn.execute(sql)
     return {
         "message": "Category deleted successfully",
         "data": data
-        }
+        } """
