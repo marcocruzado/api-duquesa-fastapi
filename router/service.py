@@ -172,7 +172,7 @@ def update_service(
             detail = "¡Service named '{}'".format(name) + " already exists! Enter another name."
             )
     # Update service
-    sql = "update db_duquesa.tb_service set category_id = {}".format(category_id) + ", name = '{}'".format(name) + ", amount = {}".format(amount) + ", last_update_timestamp = '{}'".format(current_date_and_time)
+    sql = "update db_duquesa.tb_service set category_id = {}".format(category_id) + ", name = '{}'".format(name) + ", amount = {}".format(amount) + ", registration_timestamp = '{}'".format(current_date_and_time)
     if description != None: sql += ", description = '{}'".format(description)
     sql += " where service_id = {}".format(service_id)
     query = conn.execute(sql)
