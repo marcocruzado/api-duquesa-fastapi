@@ -2,6 +2,7 @@
 from config.db import conn
 from schemas.tb_transaction import Transaction
 from datetime import datetime
+import json
 
 # FastAPI
 from fastapi import APIRouter
@@ -66,24 +67,54 @@ def show_specific_transaction(
         )
     ):
     # Check if the transaction_id exists
-    sql = "SELECT tt.transaction_id, tt.user_id, tu.name AS user_name, tu.lastname AS user_lastname, tu.msisdn AS user_msisdn, tu.email AS user_email, tt.service_id, ts.name AS service_name, ts.description AS service_description, ts.amount AS service_amount, tt.additional_id, tt.total_amount, tt.registration_timestamp FROM db_duquesa.tb_transaction AS tt INNER JOIN db_duquesa.tb_user AS tu ON tt.user_id = tu.user_id INNER JOIN db_duquesa.tb_service AS ts ON tt.service_id = ts.service_id where transaction_id = {}".format(transaction_id)
+    sql = '''SELECT tt.transaction_id, 
+                    tt.user_id, 
+                    tu.name AS user_name, 
+                    tu.lastname AS user_lastname, 
+                    tu.msisdn AS user_msisdn, 
+                    tu.email AS user_email, 
+                    tt.service_id, 
+                    ts.name AS service_name, 
+                    ts.description AS service_description, 
+                    ts.amount AS service_amount, 
+                    tt.additional_id, 
+                    tt.total_amount, 
+                    tt.registration_timestamp 
+                    FROM db_duquesa.tb_transaction AS tt 
+                    INNER JOIN db_duquesa.tb_user AS tu 
+                    ON tt.user_id = tu.user_id 
+                    INNER JOIN db_duquesa.tb_service AS ts 
+                    ON tt.service_id = ts.service_id 
+                    where transaction_id = {}'''.format(transaction_id)
     query = conn.execute(sql)
     data = query.fetchone()
+    print(data)
     if data == None:
         raise HTTPException(
             status_code = status.HTTP_404_NOT_FOUND,
             detail = "¡This transaction doesn't exist! Enter another transaction_id."
             )
     # Get additional_services
-    if data.additional_id != None:
-        additional_services = []
-        for i in eval(data.additional_id):        
-                sql = "select additional_id, name AS additional_name, description AS additional_description, amount AS additional_amount from db_duquesa.tb_additional where additional_id = {}".format(i)
+    #mi data.additional_id tiene la siguiente forma [1,2]
+
+    additional_services = []
+    adds_id = json.loads(data.additional_id)
+    
+    if len(adds_id):
+            for i in adds_id:    
+                sql = '''SELECT additional_id, 
+                                name AS additional_name, 
+                                description AS additional_description, 
+                                amount AS additional_amount 
+                            FROM db_duquesa.tb_additional 
+                            WHERE additional_id = {}'''.format(i)
                 query = conn.execute(sql)
                 data2 = query.fetchall()
-                data2 = data2[0]
                 additional_services.append(data2)
-    else: additional_services = None
+    else: adds_id = None
+
+    print(additional_services)
+
     return {
         "message": "Transaction successfully found.",
         "transaction_id": data.transaction_id,
