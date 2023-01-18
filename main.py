@@ -1,5 +1,6 @@
 import os
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 # Import modules
 from router.transaction import router as transaction_router
@@ -22,6 +23,14 @@ app = FastAPI(
     root_path=openapi_prefix,
 )
 
+#middleware para permitir el acceso a la api desde cualquier origen
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 #rutas para la api de transacciones
 app.include_router(transaction_router, prefix="/transaction", tags=["Transaction"])
