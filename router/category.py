@@ -9,7 +9,7 @@ from fastapi import Body, Path
 from fastapi import HTTPException
 from fastapi import status
 
-# An instance of the APIRouter class is created
+# An instance of the APIRouter class is created 
 router = APIRouter()
 
 # Get all categories
@@ -69,7 +69,7 @@ def create_category(category: Category = Body(...)):
     if len(data) > 0:
         raise HTTPException(
             status_code = status.HTTP_404_NOT_FOUND,
-            detail = "¡Category named {}".format(name) + " already exists! Enter another name."
+            detail = "¡Category named '{}'".format(name) + " already exists! Enter another name."
             )
     # Insert new category
     sql = "insert into db_duquesa.tb_category (name, registration_timestamp"
@@ -86,3 +86,86 @@ def create_category(category: Category = Body(...)):
         "message": "Category added successfully",
         "data": data
         }
+    
+
+# Update category
+@router.put("/update/{category_id}")
+def update_category(
+    category_id: int = Path(
+        ...,
+        gt = 0,
+        lt = 10000,
+        title = "Category id",
+        description = "This is the category id. It's required.",
+        example = 1001
+        ),
+    category: Category = Body(...)
+    ):
+    # Current date and time
+    current_date_and_time = datetime.now()
+    # Body keys
+    name = category.name
+    description = category.description
+    # Check if category_id exists
+    sql = "select * from db_duquesa.tb_category where category_id = {}".format(category_id)
+    query = conn.execute(sql)
+    data = query.fetchone()
+    if data == None:
+        raise HTTPException(
+            status_code = status.HTTP_404_NOT_FOUND,
+            detail = "¡This category doesn't exist! Enter another category_id."
+            )
+    # Check if category name exists
+    sql = "select * from db_duquesa.tb_category where name = '{}'".format(name)
+    query = conn.execute(sql)
+    data = query.fetchall()
+    if len(data) > 0:
+        raise HTTPException(
+            status_code = status.HTTP_404_NOT_FOUND,
+            detail = "¡Category named '{}'".format(name) + " already exists! Enter another name."
+            )
+    # Update category
+    sql = "update db_duquesa.tb_category set name = '{}', registration_timestamp = '{}'".format(name, current_date_and_time)
+    if description != None: sql += ", description = '{}'".format(description)
+    sql += " where category_id = {}".format(category_id)
+    query = conn.execute(sql)
+    # Get last updated row
+    sql = "select * from db_duquesa.tb_category where category_id = {}".format(category_id)
+    query = conn.execute(sql)
+    data = query.fetchall()
+    return {
+        "message": "Category updated successfully",
+        "data": data
+        }
+""" 
+# Delete category
+@router.delete("/delete/{category_id}")
+def delete_category(
+    category_id: int = Path(
+        ...,
+        gt = 0,
+        lt = 10000,
+        title = "Category id",
+        description = "This is the category id. It's required.",
+        example = 1001
+        )
+    ):
+    # Check if category_id exists
+    sql = "select * from db_duquesa.tb_category where category_id = {}".format(category_id)
+    query = conn.execute(sql)
+    data = query.fetchone()
+    if data == None:
+        raise HTTPException(
+            status_code = status.HTTP_404_NOT_FOUND,
+            detail = "¡This category doesn't exist! Enter another category_id."
+            )
+    # eliminar los servicios en la tabla tb_service que pertenezcan a la categoría
+    sql = "delete from db_duquesa.tb_service where category_id = {}".format(category_id)
+    query = conn.execute(sql)
+    # Delete category
+    sql = "delete from db_duquesa.tb_category where category_id = {}".format(category_id)
+    query = conn.execute(sql)
+    return {
+        "message": "Category deleted successfully",
+        "data": data
+        } """

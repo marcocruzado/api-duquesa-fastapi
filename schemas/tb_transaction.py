@@ -20,7 +20,7 @@ class Transaction(BaseModel):
         le = 1000000,
         title = "Service id",
         description = "This is the service id. It's required.",
-        example = 5
+        example = 1
         )
     additional_id: Optional[List[int]] = Field(
         default = None,
@@ -28,7 +28,7 @@ class Transaction(BaseModel):
         le = 1000000,
         title = "Additional id",
         description = "This is the additional id. It's not required.",
-        example = [2, 4]
+        example = [1, 2]
         )
     service_amount: float = Field(
         ...,
@@ -39,12 +39,12 @@ class Transaction(BaseModel):
         example = 100
         )
     additional_amount:  Optional[List[int]]= Field(
-        ...,
+        default = None,
         gt = 0,
         le = 10000,
         title = "Additional amount",
         description = "This is the additional amount. It's required.",
-        example = [10, 20]
+        example = [300, 500]
         )
     total_amount: float = Field(
         ...,
@@ -52,5 +52,5 @@ class Transaction(BaseModel):
         le = 100000,
         title = "Total amount",
         description = "This is the total amount. It's required.",
-        example = 150
+        example = 900
         )

@@ -9,7 +9,7 @@ from fastapi import Body, Path
 from fastapi import HTTPException
 from fastapi import status
 
-# An instance of the APIRouter class is created
+# An instance of the APIRouter class is created 
 router = APIRouter()
 
 # Get all services
@@ -106,7 +106,7 @@ def create_service(service: Service = Body(...)):
     if len(data) > 0:
         raise HTTPException(
             status_code = status.HTTP_404_NOT_FOUND,
-            detail = "¡Service named {}".format(name) + " already exists! Enter another name."
+            detail = "¡Service named '{}'".format(name) + " already exists! Enter another name."
             )
     # Insert new service
     sql = "insert into db_duquesa.tb_service (category_id, name, amount, registration_timestamp"
@@ -121,5 +121,95 @@ def create_service(service: Service = Body(...)):
     data = query.fetchall()
     return {
         "message": "Service added successfully",
+        "data": data
+        }
+
+# Update service
+@router.put("/update/{service_id}")
+def update_service(
+    service_id: int = Path(
+        ...,
+        gt = 0,
+        lt = 1000000,
+        title = "Service id",
+        description = "This is the service id. It's required.",
+        example = 5
+        ),
+    service: Service = Body(...)
+    ):
+    # Current date and time
+    current_date_and_time = datetime.now()
+    # Body keys
+    category_id = service.category_id
+    name = service.name
+    description = service.description
+    amount = service.amount
+    # Check if service id doesn't exist
+    sql = "select * from db_duquesa.tb_service where service_id = {}".format(service_id)
+    query = conn.execute(sql)
+    data = query.fetchall()
+    if len(data) == 0:
+        raise HTTPException(
+            status_code = status.HTTP_404_NOT_FOUND,
+            detail = "¡Service id {}".format(service_id) + " doesn't exist! Enter another service_id."
+            )
+    # Check if category id doesn't exist
+    sql = "select * from db_duquesa.tb_category where category_id = {}".format(category_id)
+    query = conn.execute(sql)
+    data = query.fetchall()
+    if len(data) == 0:
+        raise HTTPException(
+            status_code = status.HTTP_400_BAD_REQUEST,
+            detail = "¡category_id {}".format(category_id) + " doesn't exist! Enter another category_id."
+            )
+    # Check if service name exists
+    sql = "select * from db_duquesa.tb_service where name = '{}'".format(name)
+    query = conn.execute(sql)
+    data = query.fetchall()
+    if len(data) > 0:
+        raise HTTPException(
+            status_code = status.HTTP_404_NOT_FOUND,
+            detail = "¡Service named '{}'".format(name) + " already exists! Enter another name."
+            )
+    # Update service
+    sql = "update db_duquesa.tb_service set category_id = {}".format(category_id) + ", name = '{}'".format(name) + ", amount = {}".format(amount) + ", registration_timestamp = '{}'".format(current_date_and_time)
+    if description != None: sql += ", description = '{}'".format(description)
+    sql += " where service_id = {}".format(service_id)
+    query = conn.execute(sql)
+    # Get last inserted row
+    sql = "select * from db_duquesa.tb_service where service_id = {}".format(service_id)
+    query = conn.execute(sql)
+    data = query.fetchall()
+    return {
+        "message": "Service updated successfully",
+        "data": data
+        }
+    
+# Delete service
+@router.delete("/delete/{service_id}")
+def delete_service(
+    service_id: int = Path(
+        ...,
+        gt = 0,
+        lt = 1000000,
+        title = "Service id",
+        description = "This is the service id. It's required.",
+        example = 5
+        )
+    ):
+    # Check if service id doesn't exist
+    sql = "select * from db_duquesa.tb_service where service_id = {}".format(service_id)
+    query = conn.execute(sql)
+    data = query.fetchall()
+    if len(data) == 0:
+        raise HTTPException(
+            status_code = status.HTTP_404_NOT_FOUND,
+            detail = "¡Service id {}".format(service_id) + " doesn't exist! Enter another service_id."
+            )
+    # Delete service
+    sql = "delete from db_duquesa.tb_service where service_id = {}".format(service_id)
+    query = conn.execute(sql)
+    return {
+        "message": "Service deleted successfully",
         "data": data
         }

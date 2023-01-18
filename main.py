@@ -1,3 +1,4 @@
+# Python
 import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -10,17 +11,17 @@ from router.additional import router as additional_router
 from router.category import router as category_router
 from router.user import router as user_router
 
-
-from mangum import Mangum
+# FastAPI
+from fastapi import FastAPI
 
 stage = os.environ.get("STAGE", None)
 openapi_prefix = f"/{stage}" if stage else "/"
 
 app = FastAPI(
-    title="Api Duquesa",
-    description="Api para la el salon Spa Duquesa",
-    version="0.1.2",
-    root_path=openapi_prefix,
+    title = "La Duquesa Salón & Spa",
+    description = "Desarrollo Backend del proyecto (APIs).",
+    version = "1.1.0",
+    root_path = openapi_prefix,
 )
 
 #middleware para permitir el acceso a la api desde cualquier origen

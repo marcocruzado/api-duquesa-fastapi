@@ -106,7 +106,7 @@ def create_additional(additional: Additional = Body(...)):
     if len(data) > 0:
         raise HTTPException(
             status_code = status.HTTP_404_NOT_FOUND,
-            detail = "¡Additional service named {}".format(name) + " already exists! Enter another name."
+            detail = "¡Additional service named '{}'".format(name) + " already exists! Enter another name."
             )
     # Insert new additional service
     sql = "insert into db_duquesa.tb_additional (service_id, name, amount, registration_timestamp"
@@ -121,5 +121,94 @@ def create_additional(additional: Additional = Body(...)):
     data = query.fetchall()
     return {
         "message": "Additional service added successfully",
+        "data": data
+        }
+
+# Update additional
+@router.put("/update/{additional_id}")
+def update_additional(
+    additional_id: int = Path(
+        ...,
+        gt = 0,
+        lt = 100000,
+        title = "Additional id",
+        description = "This is the additional id. It's required.",
+        example = 5
+        ),
+    additional: Additional = Body(...)
+    ):
+    # Current date and time
+    current_date_and_time = datetime.now()
+    # Body keys
+    service_id = additional.service_id
+    name = additional.name
+    description = additional.description
+    amount = additional.amount
+    # Check if additional_id exists
+    sql = "select * from db_duquesa.tb_additional where additional_id = {}".format(additional_id)
+    query = conn.execute(sql)
+    data = query.fetchall()
+    if len(data) == 0:
+        raise HTTPException(
+            status_code = status.HTTP_404_NOT_FOUND,
+            detail = "¡Additional with additional_id {}".format(additional_id) + " does not exist! Enter another additional_id."
+            )
+    # Check if service id doesn't exist
+    sql = "select * from db_duquesa.tb_service where service_id = {}".format(service_id)
+    query = conn.execute(sql)
+    data = query.fetchall()
+    if len(data) == 0:
+        raise HTTPException(
+            status_code = status.HTTP_400_BAD_REQUEST,
+            detail = "¡service_id {}".format(service_id) + " doesn't exist! Enter another service_id."
+            )
+    # Check if name of the additional service exists
+    sql = "select * from db_duquesa.tb_additional where name = '{}'".format(name)
+    query = conn.execute(sql)
+    data = query.fetchall()
+    if len(data) > 0:
+        raise HTTPException(
+            status_code = status.HTTP_404_NOT_FOUND,
+            detail = "¡Additional service named '{}'".format(name) + " already exists! Enter another name."
+            )
+    # Update additional service
+    sql = "update db_duquesa.tb_additional set service_id = {}".format(service_id) + ", name = '{}'".format(name) + ", description = '{}'".format(description) + ", amount = {}".format(amount) + ", registration_timestamp = '{}'".format(current_date_and_time) + " where additional_id = {}".format(additional_id)
+    query = conn.execute(sql)
+    # Get last inserted row
+    sql = "select * from db_duquesa.tb_additional where additional_id = {}".format(additional_id)
+    query = conn.execute(sql)
+    data = query.fetchall()
+    return {
+        "message": "Additional service updated successfully",
+        "data": data
+        }
+
+
+# Delete additional
+@router.delete("/delete/{additional_id}")
+def delete_additional(
+    additional_id: int = Path(
+        ...,
+        gt = 0,
+        lt = 100000,
+        title = "Additional id",
+        description = "This is the additional id. It's required.",
+        example = 5
+        )
+    ):
+    # Check if additional_id exists
+    sql = "select * from db_duquesa.tb_additional where additional_id = {}".format(additional_id)
+    query = conn.execute(sql)
+    data = query.fetchall()
+    if len(data) == 0:
+        raise HTTPException(
+            status_code = status.HTTP_404_NOT_FOUND,
+            detail = "¡Additional with additional_id {}".format(additional_id) + " does not exist! Enter another additional_id."
+            )
+    # Delete additional service
+    sql = "delete from db_duquesa.tb_additional where additional_id = {}".format(additional_id)
+    query = conn.execute(sql)
+    return {
+        "message": "Additional service deleted successfully",
         "data": data
         }
