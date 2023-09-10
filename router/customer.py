@@ -80,7 +80,7 @@ def create_customer(customer: Customer = Body(...)):
     phone = customer.phone
     if customer.email != None:
         email = customer.email
-    else
+    else:
         email = ''
     status = 1
     # Check if phone exists
@@ -140,7 +140,7 @@ def update_customer(
     phone = customer.phone
     if customer.email != None:
         email = customer.email
-    else
+    else:
         email = ''
     status = customer.status
     # Check if phone exists and belongs to customer
