@@ -38,4 +38,15 @@ functions:
       - http:
           method: any
           path: /{proxy+}
-          cors: true
+          cors:
+            origin: '*'
+            headers:
+              - access-control-allow-origin
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+              - X-Amz-User-Agent
+              - X-Amzn-Trace-Id
+            allowCredentials: false
