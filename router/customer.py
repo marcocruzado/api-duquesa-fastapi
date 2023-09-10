@@ -179,15 +179,14 @@ def update_customer(
 # Get visits by phone
 @router.get("/visits/{phone}")
 def show_customer_visits(
-    customer_id: int = Path(
+    phone: str = Path(
         ...,
-        gt = 0,
-        lt = 1000,
-        title = "Customer id",
-        description = "This is the customer id. It's required.",
-        example = 1
-        )
-    ):
+        min_length = 10,
+        max_length = 30,
+        title = "Phone",
+        description = "This is the phone. It's required.",
+        example = "9999999999"
+    ):    
     # Check if the customer_id exists
     sql = "select * from db_duquesa.tb_customer where phone = '{}'".format(phone)
     query = conn.execute(sql)
