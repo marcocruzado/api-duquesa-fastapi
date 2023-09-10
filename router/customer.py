@@ -186,6 +186,7 @@ def show_customer_visits(
         title = "Phone",
         description = "This is the phone. It's required.",
         example = "9999999999"
+        )
     ):    
     # Check if the customer_id exists
     sql = "select * from db_duquesa.tb_customer where phone = '{}'".format(phone)
