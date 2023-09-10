@@ -176,8 +176,8 @@ def update_customer(
         "data": data
     }
 
-# Get visits by customer_id
-@router.get("/visits/{customer_id}")
+# Get visits by phone
+@router.get("/visits/{phone}")
 def show_customer_visits(
     customer_id: int = Path(
         ...,
@@ -189,16 +189,16 @@ def show_customer_visits(
         )
     ):
     # Check if the customer_id exists
-    sql = "select * from db_duquesa.tb_customer where customer_id = {}".format(customer_id)
+    sql = "select * from db_duquesa.tb_customer where phone = '{}'".format(phone)
     query = conn.execute(sql)
     data = query.fetchone()
     if data == None:
         raise HTTPException(
             status_code = status.HTTP_404_NOT_FOUND,
-            detail = "No existe cliente registrado con ese id."
+            detail = "No existe cliente registrado con el número de teléfono ingresado."
             )
     # Check if the customer_id exists
-    sql = "select COUNT(transaction_id) from db_duquesa.tb_transaction where customer_id = {}".format(customer_id)
+    sql = "select COUNT(transaction_id) from db_duquesa.tb_transaction where customer_id = {}".format(data.customer_id)
     query = conn.execute(sql)
     data = query.fetchall()
     if data == None:
