@@ -1,4 +1,4 @@
-service: api-duqesa
+service: api-duquesa
 
 package:
   individually: true
