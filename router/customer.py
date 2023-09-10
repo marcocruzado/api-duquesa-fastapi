@@ -200,7 +200,7 @@ def show_customer_visits(
     # Check if the customer_id exists
     sql = "select COUNT(transaction_id) as visitas from db_duquesa.tb_transaction where customer_id = {}".format(data.customer_id)
     query = conn.execute(sql)
-    data = query.fetchall()
+    data = query.fetchone()
     if data == None:
         raise HTTPException(
             status_code = status.HTTP_404_NOT_FOUND,
