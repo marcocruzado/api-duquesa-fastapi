@@ -25,3 +25,4 @@ toml==0.10.2
 tomli==2.0.1
 typing_extensions==4.3.0
 uvicorn==0.18.3
+passlib==1.7.4

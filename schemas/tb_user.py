@@ -13,7 +13,7 @@ class User(BaseModel):
     name: str = Field(
         ...,
         min_length = 2,
-        max_length = 50,
+        max_length = 255,
         title = "Name",
         description = "This is the user name. It's required.",
         example = "Gianluca"
@@ -21,18 +21,18 @@ class User(BaseModel):
     lastname: str = Field(
         ...,
         min_length = 2,
-        max_length = 50,
+        max_length = 255,
         title = "Last name",
         description = "This is the user's last name. It's required.",
         example = "Lapadula Vargas",
         )
-    msisdn: int = Field(
+    msisdn: str = Field(
         ...,
-        ge = 1,
-        le = 999999999999,
+        min_length = 10,
+        max_length = 30,
         title = "Msisdn",
         description = "This is the msisdn. It's required.",
-        example = 933277765
+        example = "9999999999"
         )
     email: EmailStr = Field(
         ...,

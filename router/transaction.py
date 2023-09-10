@@ -70,6 +70,8 @@ def show_specific_transaction(
     sql = '''SELECT tt.transaction_id, 
                     tt.user_id, 
                     tu.name AS user_name, 
+                    tt.customer_id,
+                    tc.name AS customer_name 
                     tu.lastname AS user_lastname, 
                     tu.msisdn AS user_msisdn, 
                     tu.email AS user_email, 
@@ -83,6 +85,8 @@ def show_specific_transaction(
                     FROM db_duquesa.tb_transaction AS tt 
                     INNER JOIN db_duquesa.tb_user AS tu 
                     ON tt.user_id = tu.user_id 
+                    INNER JOIN db_duquesa.tb_customer AS tc
+                    ON tc.customer_id = tu.customer_id
                     INNER JOIN db_duquesa.tb_service AS ts 
                     ON tt.service_id = ts.service_id 
                     where transaction_id = {}'''.format(transaction_id)
@@ -125,6 +129,10 @@ def show_specific_transaction(
             "user_msisdn": data.user_msisdn,
             "user_email": data.user_email
         },
+        "customer": {
+            "customer_id": data.customer_id,
+            "customer_name": data.customer_name
+        },
         "service": {
             "service_id": data.service_id,
             "service_name": data.service_name,
@@ -148,6 +156,7 @@ def create_transaction(transaction: Transaction = Body(...)):
     service_amount = transaction.service_amount
     additional_amount = transaction.additional_amount
     total_amount = transaction.total_amount
+    customer_id = transaction.customer_id
     # Check if user id doesn't exist
     sql = "select * from db_duquesa.tb_user where user_id = {}".format(user_id)
     query = conn.execute(sql)
@@ -183,9 +192,9 @@ def create_transaction(transaction: Transaction = Body(...)):
                     detail = "additional_id {}".format(i) + " doesn't exist! Enter another additional_id."
                     )
     # Insert new transaction
-    sql = "insert into db_duquesa.tb_transaction (user_id, service_id, service_amount, additional_amount, total_amount, registration_timestamp"
+    sql = "insert into db_duquesa.tb_transaction (user_id, service_id, service_amount, additional_amount, total_amount, registration_timestamp, customer_id"
     if additional_id != None: sql += ", additional_id"
-    sql += ") values ({}".format(user_id) + ", {}".format(service_id) + ", {}".format(service_amount) + ", '{}'".format(str(additional_amount)) + ", {}".format(total_amount) + ", '{}'".format(current_date_and_time)
+    sql += ") values ({}".format(user_id) + ", {}".format(service_id) + ", {}".format(service_amount) + ", '{}'".format(str(additional_amount)) + ", {}".format(total_amount) + ", '{}'".format(current_date_and_time) + ", {}".format(customer_id)
     if additional_id != None: sql += ", '{}'".format(str(additional_id))
     sql += ")"
     query = conn.execute(sql)
@@ -194,7 +203,7 @@ def create_transaction(transaction: Transaction = Body(...)):
     query = conn.execute(sql)
     data = query.fetchone()
     return {
-        "message": "Transaction successfully created.",
+        "message": "Venta registrada satisfactoriamente.",
         "data": data
         }
 
@@ -208,6 +217,7 @@ def update_transaction(transaction_id: int, transaction: Transaction = Body(...)
     service_amount = transaction.service_amount
     additional_amount = transaction.additional_amount
     total_amount = transaction.total_amount
+    customer_id = transaction.customer_id
     # Check if transaction id doesn't exist
     sql = "select * from db_duquesa.tb_transaction where transaction_id = {}".format(transaction_id)
     query = conn.execute(sql)
@@ -252,7 +262,7 @@ def update_transaction(transaction_id: int, transaction: Transaction = Body(...)
                     detail = "additional_id {}".format(i) + " doesn't exist! Enter another additional_id."
                     )
     # Update transaction
-    sql = "update db_duquesa.tb_transaction set user_id = {}".format(user_id) + ", service_id = {}".format(service_id) + ", service_amount = {}".format(service_amount) + ", additional_amount = '{}'".format(str(additional_amount)) + ", total_amount = {}".format(total_amount)
+    sql = "update db_duquesa.tb_transaction set user_id = {}".format(user_id) + ", service_id = {}".format(service_id) + ", service_amount = {}".format(service_amount) + ", additional_amount = '{}'".format(str(additional_amount)) + ", total_amount = {}".format(total_amount) + ", customer_id = {}".format(customer_id)
     if additional_id != None: sql += ", additional_id = '{}'".format(str(additional_id))
     sql += " where transaction_id = {}".format(transaction_id)
     query = conn.execute(sql)

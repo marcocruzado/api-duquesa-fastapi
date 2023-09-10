@@ -54,3 +54,11 @@ class Transaction(BaseModel):
         description = "This is the total amount. It's required.",
         example = 900
         )
+    customer_id: int = Field(
+        ...,
+        gt = 0,
+        le = 1000000,
+        title = "User id",
+        description = "This is the customer id. It's required.",
+        example = 1
+        )

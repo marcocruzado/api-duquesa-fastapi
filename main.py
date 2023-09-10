@@ -11,6 +11,7 @@ from router.service import router as service_router
 from router.additional import router as additional_router
 from router.category import router as category_router
 from router.user import router as user_router
+from router.customer import router as customer_router
 
 # FastAPI
 from fastapi import FastAPI
@@ -46,5 +47,7 @@ app.include_router(additional_router, prefix="/additional", tags=["Additional"])
 app.include_router(category_router, prefix="/category", tags=["Category"])
 #rutas para la api de usuarios
 app.include_router(user_router, prefix="/user", tags=["User"])
+#rutas para las apis de clientes
+app.include_router(customer_router, prefix="/customer", tags=["Customer"])
 
 handler = Mangum(app)
