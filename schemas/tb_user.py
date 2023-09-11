@@ -1,3 +1,6 @@
+# Python
+from typing import Optional
+
 # Pydantic
 from pydantic import BaseModel, Field, EmailStr
 
@@ -40,12 +43,12 @@ class User(BaseModel):
         description = "This is the email. It's required.",
         example = "gianluca.lapadula@hotmail.com"
         )
-    password: str = Field(
+    password: Optional[str] = Field(
         ...,
         min_length = 5,
         max_length = 50,
         title = "Password",
-        description = "This is the password. It's required.",
+        description = "This is the password.",
         example = "password"
         )
     status: int = Field(
