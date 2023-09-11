@@ -154,7 +154,7 @@ def update_customer(
                 status_code = status.HTTP_404_NOT_FOUND,
                 detail = "¡Ya existe un cliente con número de teléfono '{}'".format(msisdn) + "! Ingrese otro número de teléfono."            
                 )      
-    if email.length > 0:
+    if customer.email != None:
         # Check if email exists - if entered - and belongs to customer
         sql = "select * from db_duquesa.tb_customer where email = '{}'".format(email)
         query = conn.execute(sql)
