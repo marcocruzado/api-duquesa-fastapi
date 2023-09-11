@@ -15,7 +15,7 @@ class Category(BaseModel):
         )
     description: Optional[str] = Field(
         default = None,
-        min_length = 10,
+        min_length = 2,
         max_length = 100,
         title = "Category description",
         description = "This is the category description. It's not required.",

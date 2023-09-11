@@ -23,7 +23,7 @@ class Additional(BaseModel):
         )
     description: Optional[str] = Field(
         default = None,
-        min_length = 10,
+        min_length = 2,
         max_length = 100,
         title = "Description of the additional service",
         description = "This is the description of the additional service. It's not required.",
