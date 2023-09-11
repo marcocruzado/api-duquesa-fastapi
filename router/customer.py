@@ -82,7 +82,7 @@ def create_customer(customer: Customer = Body(...)):
         email = customer.email.lower()
     else:
         email = ''
-    status = 1
+    astatus = 1
     # Check if phone exists
     sql = "select * from db_duquesa.tb_customer where phone = {}".format(phone)
     query = conn.execute(sql)
@@ -90,7 +90,7 @@ def create_customer(customer: Customer = Body(...)):
     if len(data) > 0:
         raise HTTPException(
             status_code = status.HTTP_404_NOT_FOUND,
-            detail = "¡Phone {}".format(phone) + " already exists! Enter another phone."
+            detail = "¡Ya existe un cliente con número de teléfono '{}'".format(msisdn) + "! Ingrese otro número de teléfono."            
             )
     if email.length > 0:
         # Check if email exists - if entered
@@ -100,17 +100,17 @@ def create_customer(customer: Customer = Body(...)):
         if len(data) > 0:
             raise HTTPException(
                 status_code = status.HTTP_404_NOT_FOUND,
-                detail = "¡email '{}'".format(email) + " already exists! Enter another email."
+                detail = "¡Ya existe un cliente con email '{}'".format(email) + "! Ingrese otro email."            
                 )
     # Insert new customer
-    sql = "insert into db_duquesa.tb_customer (name, phone, email, status, registration_timestamp) values ('{}', '{}', '{}', {}, '{}')".format(name, phone, email, status, current_date_and_time)
+    sql = "insert into db_duquesa.tb_customer (name, phone, email, status, registration_timestamp) values ('{}', '{}', '{}', {}, '{}')".format(name, phone, email, astatus, current_date_and_time)
     query = conn.execute(sql)
     # Get last inserted row
     sql = "select * from db_duquesa.tb_customer where customer_id = (select MAX(customer_id) from db_duquesa.tb_customer)"
     query = conn.execute(sql)
     data = query.fetchone()
     return {
-        "message": "Customer added successfully",
+        "message": "Cliente agregado satisfactoriamente.",
         "data": data
     }
 
@@ -142,7 +142,7 @@ def update_customer(
         email = customer.email.lower()
     else:
         email = ''
-    status = customer.status
+    astatus = customer.status
     # Check if phone exists and belongs to customer
     sql = "select * from db_duquesa.tb_customer where phone = {}".format(phone)
     query = conn.execute(sql)
@@ -151,7 +151,7 @@ def update_customer(
         if data.customer_id != customer_id:
             raise HTTPException(
                 status_code = status.HTTP_404_NOT_FOUND,
-                detail = "¡Phone {}".format(phone) + " already exists! Enter another phone."
+                detail = "¡Ya existe un cliente con número de teléfono '{}'".format(msisdn) + "! Ingrese otro número de teléfono."            
                 )
     if email.length > 0:
         # Check if email exists - if entered - and belongs to customer
@@ -162,7 +162,7 @@ def update_customer(
             if data.customer_id != customer_id:
                 raise HTTPException(
                     status_code = status.HTTP_404_NOT_FOUND,
-                    detail = "¡email {}".format(email) + " already exists! Enter another email."
+                    detail = "¡Ya existe un cliente con email '{}'".format(email) + "! Ingrese otro email."            
                     )
     # Update customer
     sql = "update db_duquesa.tb_customer set name = '{}', phone = '{}', email = '{}', status = {}) where customer_id = {}".format(name, phone, email, status, customer_id)
@@ -172,7 +172,7 @@ def update_customer(
     query = conn.execute(sql)
     data = query.fetchone()
     return {
-        "message": "Customer updated successfully",
+        "message": "Cliente actualizado satisfactoriamente.",
         "data": data
     }
 
