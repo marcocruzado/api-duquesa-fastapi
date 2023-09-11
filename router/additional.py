@@ -187,7 +187,7 @@ def update_additional(
     if data != None:
         if data.additional_id != additional_id:        
             raise HTTPException(
-                status_code = status.HTTP_404_NOT_FOUND,
+                status_code = status.HTTP_400_BAD_REQUEST,
                 detail = "¡Ya existe un servicio adicional con nombre '{}'".format(name) + "! Ingrese otro nombre."
                 )    
     # Update additional service
