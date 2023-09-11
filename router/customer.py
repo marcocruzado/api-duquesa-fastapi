@@ -137,9 +137,12 @@ def update_customer(
         email = ''    
     # Check if the customer_id exists
     sql = "select * from db_duquesa.tb_customer where customer_id = {}".format(customer_id)
-    print(sql);
+    print(sql)
+    print(customer)
+    print(customer_id)
     query = conn.execute(sql)
     data = query.fetchone()
+    print(data)
     if data == None:
         raise HTTPException(
             status_code = status.HTTP_404_NOT_FOUND,
