@@ -48,6 +48,14 @@ class User(BaseModel):
         description = "This is the password. It's required.",
         example = "password"
         )
+    status: int = Field(
+        ...,
+        gt = -1,
+        le = 10000,
+        title = "Status",
+        description = "This is the status. It's required.",
+        example = 1
+        )
 
 class Login(BaseModel):
     email: EmailStr = Field(

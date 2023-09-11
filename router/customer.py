@@ -79,7 +79,7 @@ def create_customer(customer: Customer = Body(...)):
     name = customer.name
     phone = customer.phone
     if customer.email != None:
-        email = customer.email
+        email = customer.email.lower()
     else:
         email = ''
     status = 1
@@ -139,7 +139,7 @@ def update_customer(
     name = customer.name
     phone = customer.phone
     if customer.email != None:
-        email = customer.email
+        email = customer.email.lower()
     else:
         email = ''
     status = customer.status

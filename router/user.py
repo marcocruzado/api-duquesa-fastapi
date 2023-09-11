@@ -22,7 +22,23 @@ def show_all_users():
     if len(data) == 0:
         raise HTTPException(
             status_code = status.HTTP_404_NOT_FOUND,
-            detail = "¡There aren't users!"
+            detail = "No hay usuarios registrados."
+            )
+    return {
+        "message": "Success",
+        "data": data
+        }
+
+# Get all active users
+@router.get("/detail_active")
+def show_all_active_users():
+    sql = "select * from db_duquesa.tb_user where status = 1"
+    query = conn.execute(sql)
+    data = query.fetchall()
+    if len(data) == 0:
+        raise HTTPException(
+            status_code = status.HTTP_404_NOT_FOUND,
+            detail = "No hay usuarios activos registrados."
             )
     return {
         "message": "Success",
@@ -65,8 +81,9 @@ def create_user(user: User = Body(...)):
     name = user.name
     lastname = user.lastname
     msisdn = user.msisdn
-    email = user.email
+    email = user.email.lower()
     password = user.password
+    astatus = 1
     # Check if role id doesn't exist
     sql = "select * from db_duquesa.tb_role where role_id = {}".format(role_id)
     query = conn.execute(sql)
@@ -83,7 +100,7 @@ def create_user(user: User = Body(...)):
     if len(data) > 0:
         raise HTTPException(
             status_code = status.HTTP_404_NOT_FOUND,
-            detail = "¡msisdn {}".format(msisdn) + " already exists! Enter another msisdn."
+            detail = "¡Ya existe un usuario con número de teléfono '{}'".format(msisdn) + "! Ingrese otro número de teléfono."            
             )
     # Check if email exists
     sql = "select * from db_duquesa.tb_user where email = '{}'".format(email)
@@ -92,19 +109,90 @@ def create_user(user: User = Body(...)):
     if len(data) > 0:
         raise HTTPException(
             status_code = status.HTTP_404_NOT_FOUND,
-            detail = "¡email '{}'".format(email) + " already exists! Enter another email."
+            detail = "¡Ya existe un usuario con email '{}'".format(email) + "! Ingrese otro email."            
             )
     # Insert new user
-    sql = "insert into db_duquesa.tb_user (role_id, name, lastname, msisdn, email, password, registration_timestamp) values ({}, '{}', '{}', {}, '{}', '{}', '{}')".format(role_id, name, lastname, msisdn, email, hash_password(password), current_date_and_time)
+    sql = "insert into db_duquesa.tb_user (role_id, name, lastname, msisdn, email, password, registration_timestamp status) values ({}, '{}', '{}', {}, '{}', '{}', '{}', {})".format(role_id, name, lastname, msisdn, email, hash_password(password), current_date_and_time, astatus)
     query = conn.execute(sql)
     # Get last inserted row
     sql = "select * from db_duquesa.tb_user where user_id = (select MAX(user_id) from db_duquesa.tb_user)"
     query = conn.execute(sql)
     data = query.fetchone()
     return {
-        "message": "User added successfully",
+        "message": "Usuario agregado satisfactoriamente.",
         "data": data
     }
+
+# Update user
+@router.put("/update/{user_id}")
+def update_user(
+    user_id: int = Path(
+        ...,
+        gt = 0,
+        lt = 10000,
+        title = "User id",
+        description = "This is the user id. It's required.",
+        example = 1001
+        ),
+    user: User = Body(...)
+    ):
+    # Body keys
+    role_id = user.role_id
+    name = user.name
+    lastname = user.lastname
+    msisdn = user.msisdn
+    email = user.email.lower()
+    astatus = user.status
+    # Check if role id doesn't exist
+    sql = "select * from db_duquesa.tb_role where role_id = {}".format(role_id)
+    query = conn.execute(sql)
+    data = query.fetchall()
+    if len(data) == 0:
+        raise HTTPException(
+            status_code = status.HTTP_400_BAD_REQUEST,
+            detail = "¡role_id {}".format(role_id) + " doesn't exist! Enter another role_id."
+            )
+    # Check if user_id exists
+    sql = "select * from db_duquesa.tb_user where user_id = {}".format(user_id)
+    query = conn.execute(sql)
+    data = query.fetchone()
+    if data == None:
+        raise HTTPException(
+            status_code = status.HTTP_404_NOT_FOUND,
+            detail = "¡This id doesn't exist! Enter another user_id."
+            )
+    # Check if msisdn exists
+    sql = "select * from db_duquesa.tb_user where msisdn = '{}'".format(msisdn)
+    query = conn.execute(sql)
+    data = query.fetchone()
+    if data != None:
+        if data.user_id != user_id:        
+            raise HTTPException(
+                status_code = status.HTTP_404_NOT_FOUND,
+                detail = "¡Ya existe un usuario con número de teléfono '{}'".format(msisdn) + "! Ingrese otro número de teléfono."            
+                )  
+    # Check if email exists
+    sql = "select * from db_duquesa.tb_user where email = '{}'".format(email)
+    query = conn.execute(sql)
+    data = query.fetchone()
+    if data != None:
+        if data.user_id != user_id:        
+            raise HTTPException(
+                status_code = status.HTTP_404_NOT_FOUND,
+                detail = "¡Ya existe un usuario con email '{}'".format(email) + "! Ingrese otro email."            
+                )  
+    # Update user
+    sql = "update db_duquesa.tb_user set role_id = {}, name = '{}', lastname = '{}', msisdn = '{}',  email = '{}', status = {}".format(role_id, name, lastname, msisdn, email, astatus)
+    sql += " where user_id = {}".format(user_id)
+    query = conn.execute(sql)
+    # Get updated row
+    sql = "select * from db_duquesa.tb_user where user_id = {}".format(user_id)
+    query = conn.execute(sql)
+    data = query.fetchall()
+    return {
+        "message": "Usuario actualizado satisfactoriamente.",
+        "data": data
+        }
 
 # Login
 @router.post("/login")
