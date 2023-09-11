@@ -76,7 +76,7 @@ def create_customer(customer: Customer = Body(...)):
     # Current date and time
     current_date_and_time = datetime.now()
     # Body keys    
-    name = customer.name
+    fullname = customer.fullname
     phone = customer.phone
     if customer.email != None:
         email = customer.email.lower()
@@ -103,7 +103,7 @@ def create_customer(customer: Customer = Body(...)):
                 detail = "¡Ya existe un cliente con email '{}'".format(email) + "! Ingrese otro email."            
                 )
     # Insert new customer
-    sql = "insert into db_duquesa.tb_customer (name, phone, email, status, registration_timestamp) values ('{}', '{}', '{}', {}, '{}')".format(name, phone, email, astatus, current_date_and_time)
+    sql = "insert into db_duquesa.tb_customer (fullname, phone, email, status, registration_timestamp) values ('{}', '{}', '{}', {}, '{}')".format(fullname, phone, email, astatus, current_date_and_time)
     query = conn.execute(sql)
     # Get last inserted row
     sql = "select * from db_duquesa.tb_customer where customer_id = (select MAX(customer_id) from db_duquesa.tb_customer)"
@@ -136,7 +136,7 @@ def update_customer(
             detail = "No existe cliente registrado con ese id."
             )
     # Body keys    
-    name = customer.name
+    fullname = customer.fullname
     phone = customer.phone
     if customer.email != None:
         email = customer.email.lower()
@@ -165,7 +165,7 @@ def update_customer(
                     detail = "¡Ya existe un cliente con email '{}'".format(email) + "! Ingrese otro email."            
                     )        
     # Update customer
-    sql = "update db_duquesa.tb_customer set name = '{}', phone = '{}', email = '{}', status = {}) where customer_id = {}".format(name, phone, email, status, customer_id)
+    sql = "update db_duquesa.tb_customer set fullname = '{}', phone = '{}', email = '{}', status = {}) where customer_id = {}".format(fullname, phone, email, status, customer_id)
     query = conn.execute(sql)
     # Get updated row
     sql = "select * from db_duquesa.tb_customer where customer_id = {})".format(customer_id)
