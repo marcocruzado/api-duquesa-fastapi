@@ -28,6 +28,22 @@ def show_all_services():
         "data": data
         }
 
+# Get all active services
+@router.get("/detail_active")
+def show_all_active_services():
+    sql = "select * from db_duquesa.tb_service where status = 1"
+    query = conn.execute(sql)
+    data = query.fetchall()
+    if len(data) == 0:
+        raise HTTPException(
+            status_code = status.HTTP_404_NOT_FOUND,
+            detail = "No hay servicios activos"
+            )
+    return {
+        "message": "Success",
+        "data": data
+        }
+
 # Get service by service_id
 @router.get("/detail/{service_id}")
 def show_service(
@@ -90,6 +106,7 @@ def create_service(service: Service = Body(...)):
     name = service.name
     description = service.description
     amount = service.amount
+    status = 1
     # Check if category id doesn't exist
     sql = "select * from db_duquesa.tb_category where category_id = {}".format(category_id)
     query = conn.execute(sql)
@@ -106,12 +123,12 @@ def create_service(service: Service = Body(...)):
     if len(data) > 0:
         raise HTTPException(
             status_code = status.HTTP_404_NOT_FOUND,
-            detail = "¡Service named '{}'".format(name) + " already exists! Enter another name."
+            detail = "¡Ya existe un servicio con nombre '{}'".format(name) + "! Ingrese otro nombre."
             )
     # Insert new service
-    sql = "insert into db_duquesa.tb_service (category_id, name, amount, registration_timestamp"
+    sql = "insert into db_duquesa.tb_service (category_id, name, amount, registration_timestamp, status"
     if description != None: sql += ", description"
-    sql += ") values ({}".format(category_id) + ", '{}'".format(name) + ", {}".format(amount) + ", '{}'".format(current_date_and_time)
+    sql += ") values ({}".format(category_id) + ", '{}'".format(name) + ", {}".format(amount) + ", '{}'".format(current_date_and_time) + ", {}".format(status)
     if description != None: sql += ", '{}'".format(description)
     sql += ")"
     query = conn.execute(sql)
@@ -120,7 +137,7 @@ def create_service(service: Service = Body(...)):
     query = conn.execute(sql)
     data = query.fetchall()
     return {
-        "message": "Service added successfully",
+        "message": "Servicio agregado satisfactoriamente.",
         "data": data
         }
 
@@ -144,6 +161,7 @@ def update_service(
     name = service.name
     description = service.description
     amount = service.amount
+    status = service.status
     # Check if service id doesn't exist
     sql = "select * from db_duquesa.tb_service where service_id = {}".format(service_id)
     query = conn.execute(sql)
@@ -173,7 +191,7 @@ def update_service(
                 detail = "¡Ya existe un servicio con nombre '{}'".format(name) + "! Ingrese otro nombre."
                 )
     # Update service
-    sql = "update db_duquesa.tb_service set category_id = {}".format(category_id) + ", name = '{}'".format(name) + ", amount = {}".format(amount) + ", registration_timestamp = '{}'".format(current_date_and_time)
+    sql = "update db_duquesa.tb_service set category_id = {}".format(category_id) + ", name = '{}'".format(name) + ", amount = {}".format(amount) + ", registration_timestamp = '{}'".format(current_date_and_time) + ", status = {}".format(status)
     if description != None: sql += ", description = '{}'".format(description)
     sql += " where service_id = {}".format(service_id)
     query = conn.execute(sql)
