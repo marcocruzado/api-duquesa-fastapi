@@ -165,9 +165,9 @@ def update_service(
     # Check if service name exists
     sql = "select * from db_duquesa.tb_service where name = '{}'".format(name)
     query = conn.execute(sql)
-    data = query.fetchall()
+    data = query.fetchone()
     if len(data) > 0:
-        if len(data) > 1 or (len(data) == 1 and data.service_id != service_id):        
+        if data.service_id != service_id:        
             raise HTTPException(
                 status_code = status.HTTP_404_NOT_FOUND,
                 detail = "¡Ya existe un servicio con nombre '{}'".format(name) + "! Ingrese otro nombre."
