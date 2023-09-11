@@ -218,6 +218,6 @@ def login(login: Login = Body(...)):
             )
     # Get access to the web application
     return {
-        "message": "Welcome, '{}".format(data.name) + " {}'".format(data.lastname),
+        "message": "Bienvenido, '{}".format(data.name) + " {}'".format(data.lastname),
         "data": data
         }
