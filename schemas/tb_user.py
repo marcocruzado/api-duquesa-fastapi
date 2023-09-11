@@ -45,7 +45,6 @@ class User(BaseModel):
         )
     password: Optional[str] = Field(
         ...,
-        min_length = 5,
         max_length = 50,
         title = "Password",
         description = "This is the password.",
