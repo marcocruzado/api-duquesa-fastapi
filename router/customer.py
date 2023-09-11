@@ -126,7 +126,15 @@ def update_customer(
         example = 1
         ),
     customer: Customer = Body(...)
-    ):
+    ):    
+    # Body keys    
+    fullname = customer.fullname
+    phone = customer.phone
+    if customer.email != None:
+        email = customer.email.lower()
+    else:
+        email = ''
+    astatus = customer.status
     # Check if the customer_id exists
     sql = "select * from db_duquesa.tb_customer where customer_id = {}".format(customer_id)
     query = conn.execute(sql)
@@ -136,14 +144,6 @@ def update_customer(
             status_code = status.HTTP_404_NOT_FOUND,
             detail = "No existe cliente registrado con ese id."
             )
-    # Body keys    
-    fullname = customer.fullname
-    phone = customer.phone
-    if customer.email != None:
-        email = customer.email.lower()
-    else:
-        email = ''
-    astatus = customer.status
     # Check if phone exists and belongs to customer
     sql = "select * from db_duquesa.tb_customer where phone = '{}'".format(phone)
     query = conn.execute(sql)
