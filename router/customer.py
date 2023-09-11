@@ -106,7 +106,7 @@ def create_customer(customer: Customer = Body(...)):
     sql = "insert into db_duquesa.tb_customer (fullname, phone, email, status, registration_timestamp) values ('{}', '{}', '{}', {}, '{}')".format(fullname, phone, email, astatus, current_date_and_time)
     query = conn.execute(sql)
     # Get last inserted row
-    sql = "select * from db_duquesa.tb_customer where customer_id = (select MAX(customer_id) from db_duquesa.tb_customer)"
+    sql = "select * from db_duquesa.tb_customer where customer_id = (select MAX(customer_id) from db_duquesa.tb_customer"
     query = conn.execute(sql)
     data = query.fetchone()
     return {
@@ -137,12 +137,8 @@ def update_customer(
         email = ''    
     # Check if the customer_id exists
     sql = "select * from db_duquesa.tb_customer where customer_id = {}".format(customer_id)
-    print(sql)
-    print(customer)
-    print(customer_id)
     query = conn.execute(sql)
     data = query.fetchone()
-    print(data)
     if data == None:
         raise HTTPException(
             status_code = status.HTTP_404_NOT_FOUND,
@@ -150,10 +146,8 @@ def update_customer(
             )
     # Check if phone exists and belongs to customer
     sql = "select * from db_duquesa.tb_customer where phone = '{}'".format(phone)
-    print(sql)
     query = conn.execute(sql)
     data = query.fetchone()
-    print(data)
     if data != None:
         if data.customer_id != customer_id:        
             raise HTTPException(
@@ -175,7 +169,7 @@ def update_customer(
     sql = "update db_duquesa.tb_customer set fullname = '{}', phone = '{}', email = '{}', status = {} where customer_id = {}".format(fullname, phone, email, astatus, customer_id)
     query = conn.execute(sql)
     # Get updated row
-    sql = "select * from db_duquesa.tb_customer where customer_id = {})".format(customer_id)
+    sql = "select * from db_duquesa.tb_customer where customer_id = {}".format(customer_id)
     query = conn.execute(sql)
     data = query.fetchone()
     return {
