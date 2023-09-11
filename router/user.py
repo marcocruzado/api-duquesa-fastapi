@@ -82,7 +82,8 @@ def create_user(user: User = Body(...)):
     lastname = user.lastname
     msisdn = user.msisdn
     email = user.email.lower()
-    password = user.password
+    if user.password != None:
+        password = user.password    
     astatus = 1
     # Check if role id doesn't exist
     sql = "select * from db_duquesa.tb_role where role_id = {}".format(role_id)
