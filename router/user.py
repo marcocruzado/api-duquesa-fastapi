@@ -207,7 +207,7 @@ def login(login: Login = Body(...)):
     if not query.rowcount:
         raise HTTPException(
             status_code = status.HTTP_400_BAD_REQUEST,
-            detail = "¡email '{}'".format(email) + " doesn't exist! Enter another email."
+            detail = "Correo incorrecto."
             )
     # Check if password doesn't exist
     data = query.fetchone()
@@ -219,7 +219,7 @@ def login(login: Login = Body(...)):
     if not verify_password(password, data.password):
         raise HTTPException(
             status_code = status.HTTP_400_BAD_REQUEST,
-            detail = "¡password '{}'".format(password) + " doesn't exist! Enter correct password."
+            detail = "Contraseña incorrecta."
             )
     # Get access to the web application
     return {
