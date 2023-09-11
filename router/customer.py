@@ -119,7 +119,7 @@ def create_customer(customer: Customer = Body(...)):
 def update_customer(
     customer_id: int = Path(
         ...,
-        gt = 0,
+        gt = -1,
         lt = 1000,
         title = "Customer id",
         description = "This is the customer id. It's required.",
