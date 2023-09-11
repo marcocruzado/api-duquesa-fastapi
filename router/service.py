@@ -167,21 +167,22 @@ def update_service(
     query = conn.execute(sql)
     data = query.fetchall()
     if len(data) > 0:
-        raise HTTPException(
-            status_code = status.HTTP_404_NOT_FOUND,
-            detail = "¡Service named '{}'".format(name) + " already exists! Enter another name."
-            )
+        if len(data) > 1 || (len(data) == 1 && data.service_id != service_id):        
+            raise HTTPException(
+                status_code = status.HTTP_404_NOT_FOUND,
+                detail = "¡Ya existe un servicio con nombre '{}'".format(name) + "! Ingrese otro nombre."
+                )
     # Update service
     sql = "update db_duquesa.tb_service set category_id = {}".format(category_id) + ", name = '{}'".format(name) + ", amount = {}".format(amount) + ", registration_timestamp = '{}'".format(current_date_and_time)
     if description != None: sql += ", description = '{}'".format(description)
     sql += " where service_id = {}".format(service_id)
     query = conn.execute(sql)
-    # Get last inserted row
+    # Get row data
     sql = "select * from db_duquesa.tb_service where service_id = {}".format(service_id)
     query = conn.execute(sql)
     data = query.fetchall()
     return {
-        "message": "Service updated successfully",
+        "message": "Los datos del servicio han sido actualizados satisfactoriamente.",
         "data": data
         }
     
