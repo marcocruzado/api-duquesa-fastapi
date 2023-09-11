@@ -150,8 +150,10 @@ def update_customer(
             )
     # Check if phone exists and belongs to customer
     sql = "select * from db_duquesa.tb_customer where phone = '{}'".format(phone)
+    print(sql)
     query = conn.execute(sql)
     data = query.fetchone()
+    print(data)
     if data != None:
         if data.customer_id != customer_id:        
             raise HTTPException(
