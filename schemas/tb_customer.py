@@ -5,11 +5,11 @@ from typing import Optional
 from pydantic import BaseModel, Field, EmailStr
 
 class Customer(BaseModel):
-    name: str = Field(
+    fullname: str = Field(
         ...,
         min_length = 2,
         max_length = 255,
-        title = "Name",
+        title = "Fullname",
         description = "This is the customer's name. It's required.",
         example = "Pablo Perez"
         )
