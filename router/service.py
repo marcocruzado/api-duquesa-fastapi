@@ -167,7 +167,7 @@ def update_service(
     query = conn.execute(sql)
     data = query.fetchall()
     if len(data) > 0:
-        if len(data) > 1 || (len(data) == 1 && data.service_id != service_id):        
+        if len(data) > 1 or (len(data) == 1 and data.service_id != service_id):        
             raise HTTPException(
                 status_code = status.HTTP_404_NOT_FOUND,
                 detail = "¡Ya existe un servicio con nombre '{}'".format(name) + "! Ingrese otro nombre."
