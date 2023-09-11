@@ -90,7 +90,7 @@ def create_customer(customer: Customer = Body(...)):
     if len(data) > 0:
         raise HTTPException(
             status_code = status.HTTP_404_NOT_FOUND,
-            detail = "¡Ya existe un cliente con número de teléfono '{}'".format(msisdn) + "! Ingrese otro número de teléfono."            
+            detail = "¡Ya existe un cliente con número de teléfono '{}'".format(phone) + "! Ingrese otro número de teléfono."            
             )
     if customer.email != None:
         # Check if email exists - if entered
