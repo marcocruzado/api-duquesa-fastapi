@@ -39,7 +39,7 @@ class Service(BaseModel):
         )
     status: int = Field(
         ...,
-        gt = 0,
+        gt = -1,
         le = 10000,
         title = "Status",
         description = "This is the status. It's required.",
