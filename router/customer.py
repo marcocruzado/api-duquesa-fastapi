@@ -124,7 +124,8 @@ def update_customer(
         title = "Customer id",
         description = "This is the customer id. It's required.",
         example = 1
-        )
+        ),
+    customer: Customer = Body(...)
     ):
     # Check if the customer_id exists
     sql = "select * from db_duquesa.tb_customer where customer_id = {}".format(customer_id)
