@@ -37,3 +37,11 @@ class Additional(BaseModel):
         description = "This is the amount of the additional service. It's required.",
         example = 50
         )
+    status: int = Field(
+        ...,
+        gt = -1,
+        le = 10000,
+        title = "Status",
+        description = "This is the status. It's required.",
+        example = 1
+        )
