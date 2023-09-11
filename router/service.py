@@ -106,7 +106,7 @@ def create_service(service: Service = Body(...)):
     name = service.name
     description = service.description
     amount = service.amount
-    status = 1
+    astatus = 1
     # Check if category id doesn't exist
     sql = "select * from db_duquesa.tb_category where category_id = {}".format(category_id)
     query = conn.execute(sql)
@@ -128,7 +128,7 @@ def create_service(service: Service = Body(...)):
     # Insert new service
     sql = "insert into db_duquesa.tb_service (category_id, name, amount, registration_timestamp, status"
     if description != None: sql += ", description"
-    sql += ") values ({}".format(category_id) + ", '{}'".format(name) + ", {}".format(amount) + ", '{}'".format(current_date_and_time) + ", {}".format(status)
+    sql += ") values ({}".format(category_id) + ", '{}'".format(name) + ", {}".format(amount) + ", '{}'".format(current_date_and_time) + ", {}".format(astatus)
     if description != None: sql += ", '{}'".format(description)
     sql += ")"
     query = conn.execute(sql)
@@ -161,7 +161,7 @@ def update_service(
     name = service.name
     description = service.description
     amount = service.amount
-    status = service.status
+    astatus = service.status
     # Check if service id doesn't exist
     sql = "select * from db_duquesa.tb_service where service_id = {}".format(service_id)
     query = conn.execute(sql)
@@ -191,7 +191,7 @@ def update_service(
                 detail = "¡Ya existe un servicio con nombre '{}'".format(name) + "! Ingrese otro nombre."
                 )
     # Update service
-    sql = "update db_duquesa.tb_service set category_id = {}".format(category_id) + ", name = '{}'".format(name) + ", amount = {}".format(amount) + ", registration_timestamp = '{}'".format(current_date_and_time) + ", status = {}".format(status)
+    sql = "update db_duquesa.tb_service set category_id = {}".format(category_id) + ", name = '{}'".format(name) + ", amount = {}".format(amount) + ", registration_timestamp = '{}'".format(current_date_and_time) + ", status = {}".format(astatus)
     if description != None: sql += ", description = '{}'".format(description)
     sql += " where service_id = {}".format(service_id)
     query = conn.execute(sql)

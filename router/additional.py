@@ -106,7 +106,7 @@ def create_additional(additional: Additional = Body(...)):
     name = additional.name
     description = additional.description
     amount = additional.amount
-    status = 1
+    astatus = 1
     # Check if service id doesn't exist
     sql = "select * from db_duquesa.tb_service where service_id = {}".format(service_id)
     query = conn.execute(sql)
@@ -128,7 +128,7 @@ def create_additional(additional: Additional = Body(...)):
     # Insert new additional service
     sql = "insert into db_duquesa.tb_additional (service_id, name, amount, registration_timestamp, status"
     if description != None: sql += ", description"
-    sql += ") values ({}".format(service_id) + ", '{}'".format(name) + ", {}".format(amount) + ", '{}'".format(current_date_and_time) + ", {}".format(status)
+    sql += ") values ({}".format(service_id) + ", '{}'".format(name) + ", {}".format(amount) + ", '{}'".format(current_date_and_time) + ", {}".format(astatus)
     if description != None: sql += ", '{}'".format(description)
     sql += ")"
     query = conn.execute(sql)
@@ -161,7 +161,7 @@ def update_additional(
     name = additional.name
     description = additional.description
     amount = additional.amount
-    status = additional.status
+    astatus = additional.status
     # Check if additional_id exists
     sql = "select * from db_duquesa.tb_additional where additional_id = {}".format(additional_id)
     query = conn.execute(sql)
@@ -191,7 +191,7 @@ def update_additional(
                 detail = "¡Ya existe un servicio adicional con nombre '{}'".format(name) + "! Ingrese otro nombre."
                 )    
     # Update additional service
-    sql = "update db_duquesa.tb_additional set service_id = {}".format(service_id) + ", name = '{}'".format(name) + ", description = '{}'".format(description) + ", amount = {}".format(amount) + ", registration_timestamp = '{}'".format(current_date_and_time) + ", status = {}".format(status) + " where additional_id = {}".format(additional_id)
+    sql = "update db_duquesa.tb_additional set service_id = {}".format(service_id) + ", name = '{}'".format(name) + ", description = '{}'".format(description) + ", amount = {}".format(amount) + ", registration_timestamp = '{}'".format(current_date_and_time) + ", status = {}".format(astatus) + " where additional_id = {}".format(additional_id)
     query = conn.execute(sql)
     # Get last inserted row
     sql = "select * from db_duquesa.tb_additional where additional_id = {}".format(additional_id)

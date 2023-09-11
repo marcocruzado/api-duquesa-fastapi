@@ -78,7 +78,7 @@ def create_category(category: Category = Body(...)):
     # Body keys
     name = category.name
     description = category.description
-    status = 1
+    astatus = 1
     # Check if category name exists
     sql = "select * from db_duquesa.tb_category where name = '{}'".format(name)
     query = conn.execute(sql)
@@ -91,7 +91,7 @@ def create_category(category: Category = Body(...)):
     # Insert new category
     sql = "insert into db_duquesa.tb_category (name, registration_timestamp, status"
     if description != None: sql += ", description"
-    sql += ") values ('{}'".format(name) + ", '{}'".format(current_date_and_time) + ", {}".format(status)
+    sql += ") values ('{}'".format(name) + ", '{}'".format(current_date_and_time) + ", {}".format(astatus)
     if description != None: sql += ", '{}'".format(description)
     sql += ")"
     query = conn.execute(sql)
@@ -123,7 +123,7 @@ def update_category(
     # Body keys
     name = category.name
     description = category.description
-    status = category.status
+    astatus = category.status
     # Check if category_id exists
     sql = "select * from db_duquesa.tb_category where category_id = {}".format(category_id)
     query = conn.execute(sql)
@@ -144,7 +144,7 @@ def update_category(
                 detail = "¡Category named '{}'".format(name) + " already exists! Enter another name."
                 )    
     # Update category
-    sql = "update db_duquesa.tb_category set name = '{}', registration_timestamp = '{}', status = {}".format(name, current_date_and_time, status)
+    sql = "update db_duquesa.tb_category set name = '{}', registration_timestamp = '{}', status = {}".format(name, current_date_and_time, astatus)
     if description != None: sql += ", description = '{}'".format(description)
     sql += " where category_id = {}".format(category_id)
     query = conn.execute(sql)
