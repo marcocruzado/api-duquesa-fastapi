@@ -23,7 +23,7 @@ class Service(BaseModel):
         )
     description: Optional[str] = Field(
         default = None,
-        min_length = 10,
+        min_length = 2,
         max_length = 100,
         title = "Service description",
         description = "This is the service description. It's not required.",
