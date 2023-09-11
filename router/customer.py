@@ -84,7 +84,7 @@ def create_customer(customer: Customer = Body(...)):
         email = ''
     astatus = 1
     # Check if phone exists
-    sql = "select * from db_duquesa.tb_customer where phone = {}".format(phone)
+    sql = "select * from db_duquesa.tb_customer where phone = '{}'".format(phone)
     query = conn.execute(sql)
     data = query.fetchall()
     if len(data) > 0:
@@ -145,7 +145,7 @@ def update_customer(
         email = ''
     astatus = customer.status
     # Check if phone exists and belongs to customer
-    sql = "select * from db_duquesa.tb_customer where phone = {}".format(phone)
+    sql = "select * from db_duquesa.tb_customer where phone = '{}'".format(phone)
     query = conn.execute(sql)
     data = query.fetchone()
     if data != None:
