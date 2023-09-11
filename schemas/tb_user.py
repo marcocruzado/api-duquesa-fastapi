@@ -44,7 +44,6 @@ class User(BaseModel):
         example = "gianluca.lapadula@hotmail.com"
         )
     password: Optional[str] = Field(
-        ...,
         default = None,
         min_length = 5,
         max_length = 50,
