@@ -211,6 +211,6 @@ def delete_service(
     sql = "delete from db_duquesa.tb_service where service_id = {}".format(service_id)
     query = conn.execute(sql)
     return {
-        "message": "Service deleted successfully",
+        "message": "Servicio eliminado satisfactoriamente.",
         "data": data
         }
