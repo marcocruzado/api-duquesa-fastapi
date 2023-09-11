@@ -106,7 +106,7 @@ def create_customer(customer: Customer = Body(...)):
     sql = "insert into db_duquesa.tb_customer (fullname, phone, email, status, registration_timestamp) values ('{}', '{}', '{}', {}, '{}')".format(fullname, phone, email, astatus, current_date_and_time)
     query = conn.execute(sql)
     # Get last inserted row
-    sql = "select * from db_duquesa.tb_customer where customer_id = (select MAX(customer_id) from db_duquesa.tb_customer"
+    sql = "select * from db_duquesa.tb_customer where customer_id = (select MAX(customer_id) from db_duquesa.tb_customer)"
     query = conn.execute(sql)
     data = query.fetchone()
     return {
