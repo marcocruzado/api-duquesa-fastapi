@@ -28,6 +28,22 @@ def show_all_categories():
         "data": data
         }
 
+# Get all active categories
+@router.get("/detail_active")
+def show_all_active_categories():
+    sql = "select * from db_duquesa.tb_category where status = 1"
+    query = conn.execute(sql)
+    data = query.fetchall()
+    if len(data) == 0:
+        raise HTTPException(
+            status_code = status.HTTP_404_NOT_FOUND,
+            detail = "No hay categorías activas."
+            )
+    return {
+        "message": "Success",
+        "data": data
+        }
+
 # Get category by category_id
 @router.get("/detail/{category_id}")
 def show_category(
@@ -62,6 +78,7 @@ def create_category(category: Category = Body(...)):
     # Body keys
     name = category.name
     description = category.description
+    status = 1
     # Check if category name exists
     sql = "select * from db_duquesa.tb_category where name = '{}'".format(name)
     query = conn.execute(sql)
@@ -69,12 +86,12 @@ def create_category(category: Category = Body(...)):
     if len(data) > 0:
         raise HTTPException(
             status_code = status.HTTP_404_NOT_FOUND,
-            detail = "¡Category named '{}'".format(name) + " already exists! Enter another name."
+            detail = "¡Ya existe una categoría con nombre '{}'".format(name) + "! Ingrese otro nombre."            
             )
     # Insert new category
-    sql = "insert into db_duquesa.tb_category (name, registration_timestamp"
+    sql = "insert into db_duquesa.tb_category (name, registration_timestamp, status"
     if description != None: sql += ", description"
-    sql += ") values ('{}'".format(name) + ", '{}'".format(current_date_and_time)
+    sql += ") values ('{}'".format(name) + ", '{}'".format(current_date_and_time) + ", {}".format(status)
     if description != None: sql += ", '{}'".format(description)
     sql += ")"
     query = conn.execute(sql)
@@ -83,7 +100,7 @@ def create_category(category: Category = Body(...)):
     query = conn.execute(sql)
     data = query.fetchall()
     return {
-        "message": "Category added successfully",
+        "message": "Categoría agregada satisfactoriamente.",
         "data": data
         }
     
@@ -106,6 +123,7 @@ def update_category(
     # Body keys
     name = category.name
     description = category.description
+    status = category.status
     # Check if category_id exists
     sql = "select * from db_duquesa.tb_category where category_id = {}".format(category_id)
     query = conn.execute(sql)
@@ -118,14 +136,15 @@ def update_category(
     # Check if category name exists
     sql = "select * from db_duquesa.tb_category where name = '{}'".format(name)
     query = conn.execute(sql)
-    data = query.fetchall()
-    if len(data) > 0:
-        raise HTTPException(
-            status_code = status.HTTP_404_NOT_FOUND,
-            detail = "¡Category named '{}'".format(name) + " already exists! Enter another name."
-            )
+    data = query.fetchone()
+    if data != None:
+        if data.category_id != category_id:        
+            raise HTTPException(
+                status_code = status.HTTP_404_NOT_FOUND,
+                detail = "¡Category named '{}'".format(name) + " already exists! Enter another name."
+                )    
     # Update category
-    sql = "update db_duquesa.tb_category set name = '{}', registration_timestamp = '{}'".format(name, current_date_and_time)
+    sql = "update db_duquesa.tb_category set name = '{}', registration_timestamp = '{}', status = {}".format(name, current_date_and_time, status)
     if description != None: sql += ", description = '{}'".format(description)
     sql += " where category_id = {}".format(category_id)
     query = conn.execute(sql)
@@ -134,7 +153,7 @@ def update_category(
     query = conn.execute(sql)
     data = query.fetchall()
     return {
-        "message": "Category updated successfully",
+        "message": "Categoría actualizada satisfactoriamente.",
         "data": data
         }
 """ 

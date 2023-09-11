@@ -21,3 +21,11 @@ class Category(BaseModel):
         description = "This is the category description. It's not required.",
         example = "La mejor y mayor experiencia de relajación."
         )
+    status: int = Field(
+        ...,
+        gt = -1,
+        le = 10000,
+        title = "Status",
+        description = "This is the status. It's required.",
+        example = 1
+        )
