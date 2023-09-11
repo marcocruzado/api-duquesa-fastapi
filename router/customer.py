@@ -166,7 +166,7 @@ def update_customer(
                     detail = "¡Ya existe un cliente con email '{}'".format(email) + "! Ingrese otro email."            
                     )        
     # Update customer
-    sql = "update db_duquesa.tb_customer set fullname = '{}', phone = '{}', email = '{}', status = {}) where customer_id = {}".format(fullname, phone, email, status, customer_id)
+    sql = "update db_duquesa.tb_customer set fullname = '{}', phone = '{}', email = '{}', status = {} where customer_id = {}".format(fullname, phone, email, status, customer_id)
     query = conn.execute(sql)
     # Get updated row
     sql = "select * from db_duquesa.tb_customer where customer_id = {})".format(customer_id)
