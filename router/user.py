@@ -113,7 +113,7 @@ def create_user(user: User = Body(...)):
             detail = "¡Ya existe un usuario con email '{}'".format(email) + "! Ingrese otro email."            
             )
     # Insert new user
-    sql = "insert into db_duquesa.tb_user (role_id, name, lastname, msisdn, email, password, registration_timestamp status) values ({}, '{}', '{}', {}, '{}', '{}', '{}', {})".format(role_id, name, lastname, msisdn, email, hash_password(password), current_date_and_time, astatus)
+    sql = "insert into db_duquesa.tb_user (role_id, name, lastname, msisdn, email, password, registration_timestamp, status) values ({}, '{}', '{}', {}, '{}', '{}', '{}', {})".format(role_id, name, lastname, msisdn, email, hash_password(password), current_date_and_time, astatus)
     query = conn.execute(sql)
     # Get last inserted row
     sql = "select * from db_duquesa.tb_user where user_id = (select MAX(user_id) from db_duquesa.tb_user)"
