@@ -166,7 +166,7 @@ def update_service(
     sql = "select * from db_duquesa.tb_service where name = '{}'".format(name)
     query = conn.execute(sql)
     data = query.fetchone()
-    if len(data) > 0:
+    if data != None:
         if data.service_id != service_id:        
             raise HTTPException(
                 status_code = status.HTTP_404_NOT_FOUND,
