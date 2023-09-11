@@ -29,9 +29,9 @@ class Customer(BaseModel):
         )
     status: int = Field(
         ...,
-        gt = 0,
-        le = 100,
+        gt = -1,
+        le = 10000,
         title = "Status",
-        description = "Status",
+        description = "This is the status. It's required.",
         example = 1
         )
