@@ -199,7 +199,7 @@ def show_customer_visits(
             detail = "No existe cliente registrado con el número de teléfono ingresado."
             )
     # Check if the customer_id exists
-    sql = "select COUNT(transaction_id) as visitas from db_duquesa.tb_transaction where customer_id = {}".format(data.customer_id)
+    sql = "select transaction_id, total_amount from db_duquesa.tb_transaction where customer_id = {}".format(data.customer_id)
     query = conn.execute(sql)
     data = query.fetchone()
     if data == None:
