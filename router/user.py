@@ -1,6 +1,6 @@
 # Python
 from config.db import conn
-from schemas.tb_user import User, Login
+from schemas.tb_user import User, Login, BusquedaComision
 from datetime import datetime
 from auth.verification import hash_password, verify_password
 
@@ -224,5 +224,24 @@ def login(login: Login = Body(...)):
     # Get access to the web application
     return {
         "message": "Bienvenido, '{}".format(data.name) + " {}'".format(data.lastname),
+        "data": data
+        }
+
+# Comisiones de usuarios por rango de fecha
+@router.post("/comissions")
+def comissions(parametros: BusquedaComision = Body(...)):
+    # Body keys
+    start_date = parametros.start_date
+    finish_date = parametros.finish_date
+    sql = "select (SUM(trx.total_amount)/10) as total_comission, trx.user_id, u.name as name, u.lastname as lastname from tb_transaction as trx INNER JOIN tb_user AS u ON u.user_id = trx.user_id  where trx.registration_timestamp >= '{}' AND trx.registration_timestamp <= '{}}' group by trx.user_id;".format(start_date, finish_date)
+    query = conn.execute(sql)
+    data = query.fetchall()
+    if len(data) == 0:
+        raise HTTPException(
+            status_code = status.HTTP_404_NOT_FOUND,
+            detail = "No hay resultados."
+            )
+    return {
+        "message": "Success",
         "data": data
         }

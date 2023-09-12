@@ -75,3 +75,21 @@ class Login(BaseModel):
         description = "This is the password. It's required.",
         example = "password"
         )
+
+class BusquedaComision(BaseModel):
+    start_date: str = Field(
+        ...,
+        min_length = 10,
+        max_length = 10,
+        title = "start_date",
+        description = "This is the start date. It's required.",
+        example = "2000-01-01"
+        )
+    finish_date: str = Field(
+        ...,
+        min_length = 10,
+        max_length = 10,
+        title = "finish_date",
+        description = "This is the finish date. It's required.",
+        example = "2000-01-01"
+        )
