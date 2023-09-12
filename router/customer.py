@@ -201,7 +201,7 @@ def show_customer_visits(
     # Check if the customer_id exists
     sql = "select transaction_id, total_amount, registration_timestamp from db_duquesa.tb_transaction where customer_id = {}".format(data.customer_id)
     query = conn.execute(sql)
-    data = query.fetchone()
+    data = query.fetchall()
     if data == None:
         raise HTTPException(
             status_code = status.HTTP_404_NOT_FOUND,
