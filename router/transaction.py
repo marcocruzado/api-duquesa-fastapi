@@ -21,7 +21,7 @@ def show_all_transactions():
     if len(data) == 0:
         raise HTTPException(
             status_code = status.HTTP_404_NOT_FOUND,
-            detail = "¡There aren't transactions!"
+            detail = "No hay transacciones."
             )
     return {
         "message": "Success",
@@ -294,3 +294,19 @@ def delete_transaction(transaction_id: int):
         "message": "Transaction successfully deleted."
         }
         
+# Get all transactions for report
+@router.get("/detail_report")
+def show_all_transactions_report():
+    sql = "select t.transaction_id, u.name as user_name, u.lastname as user_lastname, s.name as service_name, t.additional_id, t.service_amount, t.additional_amount, t.total_amount, t.registration_timestamp, c.fullname as customer_name from db_duquesa.tb_transaction as t INNER JOIN db_duquesa.tb_user as u ON u.user_id = t.user_id INNER JOIN db_duquesa.tb_service AS s ON s.service_id = t.service_id INNER JOIN db_duquesa.tb_customer AS c ON c.customer_id = t.customer_id;"
+    query = conn.execute(sql)
+    data = query.fetchall()
+    if len(data) == 0:
+        raise HTTPException(
+            status_code = status.HTTP_404_NOT_FOUND,
+            detail = "No hay transacciones."
+            )
+    return {
+        "message": "Success",
+        "data": data
+        }
+
