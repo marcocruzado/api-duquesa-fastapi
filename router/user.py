@@ -233,7 +233,7 @@ def comissions(parametros: BusquedaComision = Body(...)):
     # Body keys
     start_date = parametros.start_date
     finish_date = parametros.finish_date
-    sql = "select (SUM(trx.total_amount)/10) as total_comission, trx.user_id, u.name as name, u.lastname as lastname from tb_transaction as trx INNER JOIN tb_user AS u ON u.user_id = trx.user_id  where trx.registration_timestamp >= '{}' AND trx.registration_timestamp <= '{}}' group by trx.user_id;".format(start_date, finish_date)
+    sql = "select (SUM(trx.total_amount)/10) as total_comission, trx.user_id, u.name as name, u.lastname as lastname from tb_transaction as trx INNER JOIN tb_user AS u ON u.user_id = trx.user_id  where trx.registration_timestamp >= '{}' AND trx.registration_timestamp <= '{}' group by trx.user_id;".format(start_date, finish_date)
     query = conn.execute(sql)
     data = query.fetchall()
     if len(data) == 0:
