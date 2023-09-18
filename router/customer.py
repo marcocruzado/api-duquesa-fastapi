@@ -198,8 +198,8 @@ def show_customer_visits(
             status_code = status.HTTP_404_NOT_FOUND,
             detail = "No existe cliente registrado con el número de teléfono ingresado."
             )
-    # Check if the customer_id exists
-    sql = "select transaction_id, total_amount, registration_timestamp from db_duquesa.tb_transaction where customer_id = {}".format(data.customer_id)
+    # Check if the customer_id exists    
+    sql = "SELECT COUNT(transaction_id) as qty, SUM(total_amount) as total, DATE(registration_timestamp) as date FROM db_duquesa.tb_transaction where customer_id = {} GROUP BY DATE(registration_timestamp)".format(data.customer_id)
     query = conn.execute(sql)
     data = query.fetchall()
     if data == None:
